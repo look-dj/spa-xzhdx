@@ -4,12 +4,12 @@
       width="148"
       height="148"
       @click="$refs.file.click()"
-      class="sheet mx-2"
+      class="upload_sheet mr-2"
       v-ripple="{class: 'success--text'}"
     >
       <span :style="theme.co_p">请选择图片</span>
     </v-sheet>
-    <v-sheet class="mx-2">
+    <v-sheet class="ml-2">
       <img
         :src="path"
         :style="`width:${imgSize.w};height:${imgSize.h};`"
@@ -109,7 +109,7 @@ export default {
 };
 </script>
 <style lang="scss" scoped>
-.sheet {
+.upload_sheet {
   border: 1px dashed #c0ccda;
   border-radius: 6px;
   position: relative;

@@ -1,5 +1,4 @@
 import service from "./axios.js";
-import cfg from "./cfg.js";
 import { checkObjectIsEmpty } from "./util";
 let temp = {
   $loading: () => ({
@@ -13,47 +12,47 @@ export function t(data, obj = {}) {
 
 //登录
 export function login(data = {}, obj = {}) {
-  return fetch("/panel/login", data, obj);
+  return fetch("/spa/login", data, obj);
 }
 //读取站点设置
 export function siteGet(data = {}, obj = {}) {
-  return fetch("/panel/site/read", data, obj);
+  return fetch("/spa/site/read", data, obj);
 }
 //修改站点设置
 export function siteUpdate(data, obj = {}) {
-  return fetch("/panel/site/update", data, obj);
+  return fetch("/spa/site/update", data, obj);
 }
 export function aboutGet(data = {}, obj = {}) {
-  return fetch("/panel/site/read", data, obj);
+  return fetch("/spa/site/read", data, obj);
 }
 //修改站点设置
 export function aboutUpdate(data, obj = {}) {
-  return fetch("/panel/site/update", data, obj);
+  return fetch("/spa/site/update", data, obj);
 }
 //查询所有的html
 export function getTps(data, obj = {}) {
-  return fetch("/panel/file/getTps", data, obj);
+  return fetch("/spa/file/getTps", data, obj);
 }
 export function fetchRouter(data, obj = {}) {
   // console.log(data);
-  return fetch("/panel/node/getRouter", data, obj);
+  return fetch("/spa/node/getRouter", data, obj);
 }
 export function fetchMenu(data, obj = {}) {
-  return fetch("/panel/node/getMenu", data, obj);
+  return fetch("/spa/node/getMenu", data, obj);
 }
 export function getUserInfo(data, obj = {}) {
-  return fetch("/panel/user/getInfo", data, obj);
+  return fetch("/spa/user/getInfo", data, obj);
 }
 export function getAllColumnCount(data = {}, obj = {}) {
-  return fetch("/panel/column/columnCount", data, obj);
+  return fetch("/spa/column/columnCount", data, obj);
 }
 export function readPageByNid(data, obj = {}) {
-  return fetch("/panel/page/byNid", data, obj);
+  return fetch("/spa/page/byNid", data, obj);
 }
 
 export class Api {
   constructor(url) {
-    this.url = `/panel/${url}/`;
+    this.url = `/spa/${url}/`;
   }
   queryAll(data = {}, obj = {}) {
     return fetch(this.url + "queryAll", data, obj);

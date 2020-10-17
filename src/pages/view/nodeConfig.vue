@@ -1,10 +1,10 @@
 <template>
-  <v-container fluid class="px-12">
-    <v-subheader>节点设置</v-subheader>
+  <v-container fluid :class="$vuetify.breakpoint.xs ? 'moble_container' : 'px-12'">
+    <v-subheader>{{$vuetify.breakpoint.xs?'节点':'节点设置'}}</v-subheader>
     <v-card class="px-6">
       <v-toolbar flat>
-        <v-btn text @click="dialog=true;" :style="[theme.bg_p,theme.co]" class="mr-2">+添加</v-btn>
-        <v-btn text :style="[theme.bg_p,theme.co]">更新</v-btn>
+        <v-btn text @click="dialog=true;" :style="[theme.bg_p,theme.co]" class="mr-2" :small="$vuetify.breakpoint.xs?true:false">+添加</v-btn>
+        <v-btn text :style="[theme.bg_p,theme.co]" :small="$vuetify.breakpoint.xs?true:false">更新</v-btn>
       </v-toolbar>
       <v-data-table align="center" :headers="headers" disable-sort :items="items">
         <template v-slot:item.cid="{item}">{{item.cid==1?'Layout':item.cid}}</template>

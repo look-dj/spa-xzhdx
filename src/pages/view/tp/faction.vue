@@ -1,15 +1,15 @@
 <template>
-  <v-container fluid class="px-12">
-    <v-subheader>势力划分</v-subheader>
+  <v-container fluid :class="$vuetify.breakpoint.xs ? 'moble_container' : 'px-12'">
+    <v-subheader>{{$vuetify.breakpoint.xs?'势力':'势力划分'}}</v-subheader>
     <v-subheader v-if="sonColumn.length>0">
       <span>子栏目:</span>
       <v-btn small class="mx-2" text v-for="(item,idx) in sonColumn" :key="idx">{{item.name}}</v-btn>
     </v-subheader>
     <v-card class="px-6">
       <v-toolbar flat>
-        <v-btn text @click="dialog=true;" :style="[theme.bg_p,theme.co]">+添加新势力</v-btn>
+        <v-btn text @click="dialog=true;" :style="[theme.bg_p,theme.co]" :small="$vuetify.breakpoint.xs?true:false">+添加新势力</v-btn>
         <v-spacer></v-spacer>
-        <v-btn text :style="[theme.bg_p,theme.co]">搜索</v-btn>
+        <v-btn text :style="[theme.bg_p,theme.co]" :small="$vuetify.breakpoint.xs?true:false">搜索</v-btn>
       </v-toolbar>
 
       <v-data-table disable-sort :items="items" :headers="headers">

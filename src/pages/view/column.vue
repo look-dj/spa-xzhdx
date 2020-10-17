@@ -1,11 +1,11 @@
 <template>
-  <v-container ref="container" fluid class="px-12">
+  <v-container ref="container" fluid :class="$vuetify.breakpoint.xs ? 'moble_container' : 'px-12'">
     <v-card class="px-6 pb-3" elevation="1">
       <v-toolbar flat>
-        <v-card-title>栏目管理</v-card-title>
+        <v-card-title>{{$vuetify.breakpoint.xs?'栏目':'栏目管理'}}</v-card-title>
         <v-spacer></v-spacer>
-        <v-btn class="mr-4" @click="c_addColumn" :style="[theme.bg_p,theme.co]">+添加栏目</v-btn>
-        <v-btn :style="[theme.bg_p,theme.co]">更新排序</v-btn>
+        <v-btn class="mr-4" @click="c_addColumn" :style="[theme.bg_p,theme.co]" :small="$vuetify.breakpoint.xs?true:false">+添加栏目</v-btn>
+        <v-btn :style="[theme.bg_p,theme.co]" :small="$vuetify.breakpoint.xs?true:false">更新排序</v-btn>
       </v-toolbar>
       <v-data-table
         :headers="headers"
@@ -67,7 +67,7 @@
         <v-col md="6">
           <v-card-text>
             <v-row dense>
-              <v-col cols="12" md="6">
+              <v-col cols="6">
                 <v-text-field
                   label="*栏目名称"
                   v-model="columnModel.name"
@@ -76,10 +76,10 @@
                   @blur="$v.columnModel.name.$touch()"
                 ></v-text-field>
               </v-col>
-              <v-col cols="12" md="6">
+              <v-col cols="6">
                 <v-text-field label="*栏目英文名称" v-model="columnModel.ename" required></v-text-field>
               </v-col>
-              <v-col cols="12" md="6">
+              <v-col cols="6">
                 <v-select
                   label="所属栏目"
                   :items="origin"
@@ -88,7 +88,7 @@
                   v-model="columnModel.origin"
                 ></v-select>
               </v-col>
-              <v-col cols="12" md="6">
+              <v-col cols="6">
                 <v-select
                   v-model="columnModel.template"
                   label="*选择模板"
@@ -97,7 +97,7 @@
                   item-value="self"
                 ></v-select>
               </v-col>
-              <v-col cols="12" md="6" class="d-flex flex-row align-center">
+              <v-col cols="6" class="d-flex flex-row align-center">
                 <span>是否隐藏</span>
                 <v-radio-group row class="ml-10" v-model="columnModel.show">
                   <v-radio
@@ -114,17 +114,17 @@
                   ></v-radio>
                 </v-radio-group>
               </v-col>
-              <v-col cols="12" md="6">
+              <v-col cols="6">
                 <v-text-field label="链接地址" v-model="columnModel.link"></v-text-field>
               </v-col>
-              <v-col cols="12" md="6">
+              <v-col cols="6">
                 <v-text-field label="排序" v-model="columnModel.order"></v-text-field>
               </v-col>
-              <v-col cols="12" md="6">
+              <v-col cols="6">
                 <v-text-field label="关键词" v-model="columnModel.keywords"></v-text-field>
               </v-col>
-              <upload v-model="imgFile" type="auto" cols="12" :src="columnModel.pic" ref="upload"></upload>
-              <v-col cols="12" md="12">
+              <upload v-model="imgFile" :type="$vuetify.breakpoint.xs?'card':'auto'" cols="12" :src="columnModel.pic" ref="upload"></upload>
+              <v-col cols="12">
                 <v-textarea label="栏目描述" solo auto-grow v-model="columnModel.description"></v-textarea>
               </v-col>
             </v-row>

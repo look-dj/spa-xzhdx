@@ -1,6 +1,6 @@
 <template>
-  <v-container fluid class="px-12">
-    <!-- <v-subheader>关于雪中</v-subheader> -->
+  <v-container fluid :class="$vuetify.breakpoint.xs ? 'moble_container' : 'px-12'">
+    <!-- <v-subheader>{{$vuetify.breakpoint.xs?'关于':'关于雪中'}}</v-subheader> -->
     <v-subheader v-if="sonColumn.length>0">
       <span>子栏目:</span>
       <v-btn small class="mx-2" text v-for="(item,idx) in sonColumn" :key="idx">{{item.name}}</v-btn>

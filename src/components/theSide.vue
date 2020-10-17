@@ -53,8 +53,8 @@
               </v-avatar>
             </v-card-title>
             <v-card-text class="d-flex justify-center flex-column pa-0">
-              <p class="ma-0">Lucifer-dj</p>
-              <p class="ma-0">邮箱:lucifer-dj@outlook.com</p>
+              <p class="ma-0">look-dj</p>
+              <p class="ma-0">邮箱:look-dj@outlook.com</p>
             </v-card-text>
           </v-card>
         </v-card-text>

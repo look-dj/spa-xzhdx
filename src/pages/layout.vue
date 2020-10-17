@@ -5,51 +5,73 @@
       :mini-variant.sync="menuState"
       v-model="drawer"
       class="drawer"
-      :color="$vuetify.theme.dark?'#121212':'#f3f2f1'"
+      :color="$vuetify.theme.dark ? '#121212' : '#f3f2f1'"
     >
-      <v-sheet height="60" width="100%" :color="$vuetify.theme.dark?'#1E1E1E':'#f3f2f1'">
+      <v-sheet
+        height="60"
+        width="100%"
+        :color="$vuetify.theme.dark ? '#1E1E1E' : '#f3f2f1'"
+      >
         <img src="@assets/images/logo.png" v-if="!menuState" class="logo" />
-        <v-subheader class="justify-center text-uppercase" width="100%" v-if="menuState">雪中</v-subheader>
+        <v-subheader
+          class="justify-center text-uppercase"
+          width="100%"
+          v-if="menuState"
+          >雪中</v-subheader
+        >
       </v-sheet>
       <v-list class="pt-0">
         <v-list-group
-          v-for="(item,idx) in menu"
+          v-for="(item, idx) in menu"
           :key="idx"
           no-action
-          :append-icon="item.children?'iconfont-expand_more':''"
+          :append-icon="item.children ? 'iconfont-expand_more' : ''"
           @click="replace(item)"
-          :class="mid==item.id?'my-v-list-group-append-icon':''"
+          :class="mid == item.id ? 'my-v-list-group-append-icon' : ''"
           class="my-v-list-group"
         >
           <template v-slot:activator>
             <v-list-item-icon class="my-list-item-group-icon">
-              <v-icon :class="item.icon" :style="mid==item.id?theme.co:''"></v-icon>
+              <v-icon
+                :class="item.icon"
+                :style="mid == item.id ? theme.co : ''"
+              ></v-icon>
             </v-list-item-icon>
             <v-list-item-content class="my-v-list-group-content">
-              <v-list-item-title :style="mid==item.id?theme.co:''">{{item.call}}</v-list-item-title>
+              <v-list-item-title :style="mid == item.id ? theme.co : ''">{{
+                item.call
+              }}</v-list-item-title>
             </v-list-item-content>
             <div
               class="my-v-list-group-box"
-              :style="`backgroundColor:${mid==item.id?theme.bg_p.background:''};`"
+              :style="`backgroundColor:${
+                mid == item.id ? theme.bg_p.background : ''
+              };`"
             ></div>
           </template>
           <v-list-item
-            v-for="(n,i) in item.children"
+            v-for="(n, i) in item.children"
             :key="i"
             @click="replace(n)"
             class="pl-10"
-            :data-theme="$vuetify.theme.isDark?'#555':theme.bg_a.background"
+            :data-theme="$vuetify.theme.isDark ? '#555' : theme.bg_a.background"
             v-hover
           >
             <div
               class="list_item_box"
-              :style="`backgroundColor:${mid==n.id?theme.bg_p.background:''};color:#fff;`"
+              :style="`backgroundColor:${
+                mid == n.id ? theme.bg_p.background : ''
+              };color:#fff;`"
             ></div>
             <!-- <v-list-item-icon>
               <v-icon>{{n.icon}}</v-icon>
             </v-list-item-icon>-->
             <v-list-item-content class="my-v-list-item-content">
-              <v-list-item-title class="text-left pl-12" :style="mid==n.id?theme.co:''">{{n.call}}</v-list-item-title>
+              <v-list-item-title
+                class="text-left pl-12"
+                :style="mid == n.id ? theme.co : ''"
+                >{{ n.call }}</v-list-item-title
+              >
             </v-list-item-content>
           </v-list-item>
         </v-list-group>
@@ -57,18 +79,40 @@
     </v-navigation-drawer>
 
     <v-app-bar app dense text :style="theme.bg_p">
-      <v-btn depressed @click="commDrawer();" :style="[theme.bg_p,theme.co]">
+      <v-btn depressed @click="commDrawer()" :style="[theme.bg_p, theme.co]">
         <v-icon>iconfont-goodsppecategory</v-icon>
       </v-btn>
-      <v-btn text class="ml-3" :href="indexPath" target="_blank" :style="[theme.bg_p,theme.co]">浏览首页</v-btn>
+      <v-btn
+        text
+        class="ml-3"
+        :href="indexPath"
+        target="_blank"
+        :style="[theme.bg_p, theme.co]"
+        >浏览首页</v-btn
+      >
       <v-spacer></v-spacer>
-      <v-btn depressed title="退出" @click="logout" :style="[theme.bg_p,theme.co]">
+      <v-btn
+        depressed
+        title="退出"
+        @click="logout"
+        :style="[theme.bg_p, theme.co]"
+      >
         <v-icon>iconfont-zhuxiao</v-icon>
       </v-btn>
-      <v-btn depressed title="设置" @click="showSide('setting')" :style="[theme.bg_p,theme.co]">
+      <v-btn
+        depressed
+        title="设置"
+        @click="showSide('setting')"
+        :style="[theme.bg_p, theme.co]"
+      >
         <v-icon>iconfont-shezhi</v-icon>
       </v-btn>
-      <v-btn depressed title="我的信息" @click="showSide('user')" :style="[theme.bg_p,theme.co]">
+      <v-btn
+        depressed
+        title="我的信息"
+        @click="showSide('user')"
+        :style="[theme.bg_p, theme.co]"
+      >
         <v-icon>iconfont-yonghuming</v-icon>
       </v-btn>
     </v-app-bar>
@@ -76,12 +120,12 @@
     <v-main class="v-main">
       <span v-if="temp_temp"></span>
       <v-row align="stretch" height="100%">
-        <v-col :cols="viewCols" class="v-col9">
+        <v-col :cols="viewCols" class="view_col">
           <transition name="slide">
             <router-view :key="viewKey" />
           </transition>
         </v-col>
-        <v-col :cols="sideCols" class="v-col3 pa-0 ma-0">
+        <v-col :cols="sideCols" class="pa-0 ma-0" :class="$vuetify.breakpoint.xs ? 'xs_side_col' : 'side_col'" v-if="sideType!==''">
           <the-side :type="sideType" @close="closeSide"></the-side>
         </v-col>
       </v-row>
@@ -154,12 +198,15 @@ export default {
       let lastHerf = window.location.href.charAt(
         window.location.href.length - 1
       );
-      if (lastHerf === "/") {
-        that.viewKey++;
-      }
+
       that.$nextTick(() => {
-        that.sideCols = 0;
-        that.viewCols = 12;
+        if (!that.$vuetify.breakpoint.xs) {
+          if (lastHerf === "/") {
+            that.viewKey++;
+          }
+          that.sideCols = 0;
+          that.viewCols = 12;
+        }
         that.sideType = "";
       });
     },
@@ -168,12 +215,14 @@ export default {
       let lastHerf = window.location.href.charAt(
         window.location.href.length - 1
       );
-      if (lastHerf === "/") {
-        that.viewKey++;
-      }
       that.$nextTick(() => {
-        that.sideCols = 3;
-        that.viewCols = 9;
+        if (!that.$vuetify.breakpoint.xs) {
+          if (lastHerf === "/") {
+            that.viewKey++;
+          }
+          that.sideCols = 3;
+          that.viewCols = 9;
+        }
         that.sideType = type;
       });
     },
@@ -237,6 +286,11 @@ export default {
 };
 </script>
 <style lang="scss">
+.moble_container {
+  padding: 0;
+  padding-right: 12px;
+  padding-top: 20px;
+}
 .my-v-list-group-append-icon {
   position: relative;
   & .v-list-group__header__append-icon {
@@ -252,7 +306,7 @@ export default {
 .box {
   position: relative;
   width: 100%;
-  height: calc(100% - 48px);
+  // height: calc(100% - 48px);
 }
 .logo {
   height: 100%;
@@ -262,11 +316,19 @@ export default {
 .v-main {
   height: 100%;
 }
-.v-col3 {
-  position: relative;
+.side_col {
   height: calc(100vh - 48px);
+  position: relative;
 }
-.v-col9 {
+.xs_side_col{
+   height: calc(100vh - 48px);
+  position: absolute;
+  height: 100%;
+  width: 60%;
+  right: 0;
+  top: 0;
+}
+.view_col {
   height: calc(100vh - 48px);
   overflow: auto;
   overflow-y: scroll;

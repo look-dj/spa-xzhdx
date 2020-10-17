@@ -13,9 +13,9 @@ module.exports = {
   //输出文件目录，当运行 vue-cli-service build 时生成的生产环境构建文件的目录。
   outputDir: "dist",
   // 放置生成的静态资源 (js、css、img、fonts) 的目录。
-  assetsDir: "public/control",
+  assetsDir: "public/spa",
   //指定生成的 index.html 的输出路径 (相对于 outputDir)。也可以是一个绝对路径。
-  indexPath: "panel.html",
+  indexPath: "index.html",
   // 默认情况下，生成的静态资源在它们的文件名中包含了 hash 以便更好的控制缓存。然而，这也要求 index 的 HTML 是被 Vue CLI 自动生成的。如果你无法使用 Vue CLI 生成的 index HTML，你可以通过将这个选项设为 false 来关闭文件名哈希。
   filenameHashing: true,
   //是否在保存的时候使用 `eslint-loader` 进行检查。 有效的值：`ture` | `false` | `"error"`  当设置为 `"error"` 时，检查出的错误会触发编译失败。
@@ -36,7 +36,7 @@ module.exports = {
       filename: "index.html",
       // 当使用 title 选项时，
       // template 中的 title 标签需要是 <title><%= htmlWebpackPlugin.options.title %></title>
-      title: "Index Page",
+      title: "雪中控制台",
       // 在这个页面中包含的块，默认情况下会包含
       // 提取出来的通用 chunk 和 vendor chunk。
       chunks: ["chunk-vendors", "chunk-common", "index"],
@@ -82,7 +82,7 @@ module.exports = {
     port: 8080,
     proxy: {
       '/api': {
-          target: 'http://127.0.0.1:7001',
+          target: 'http://127.0.0.1:9017',
           changeOrigin: true,
           ws: true,
           pathRewrite: {
@@ -103,7 +103,7 @@ module.exports = {
             compress: {
               drop_console: false,
               drop_debugger: true,
-              pure_funcs: ["console.log"], // 移除console
+              // pure_funcs: ["console.log"], // 移除console
             },
           },
         }),

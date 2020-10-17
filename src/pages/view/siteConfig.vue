@@ -1,7 +1,7 @@
 <template>
-	<v-container fluid class="px-12">
+	<v-container fluid :class="$vuetify.breakpoint.xs ? 'moble_container' : 'px-12'">
 		<v-card flat color="transparent">
-			<v-card-title>其他dd设置</v-card-title>
+			<v-card-title>其他设置</v-card-title>
 			<v-card-text>
 				<v-row class="flex-column">
 					<v-col cols="4"><v-text-field label="网站名称" v-model="siteModel.name"></v-text-field></v-col>

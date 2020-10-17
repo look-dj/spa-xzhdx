@@ -6,7 +6,7 @@ let token = localStorage.getItem("token");
 /**
  * code为402没有查到数据
  */
-const whiteList = ["/panel/login", "/panel/register"];
+const whiteList = ["/spa/login", "/spa/register"];
 const Service = axios.create({
 	timeout: 20000,
 	baseURL: isdev?"/api":'',
