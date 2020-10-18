@@ -8,7 +8,8 @@
 
 <script>
 import { getItemForStorage, saveItemObj, getItemObj } from "@/plugins/util.js";
-import { getUserInfo, fetchRouter } from "@api";
+import config from "@/plugins/config.js";
+import { getUserInfo, fetchRouter, storageLogin } from "@api";
 export default {
   name: "App",
   provide() {
@@ -40,7 +41,11 @@ export default {
     } else that.$store.commit("changeTheme", default_theme);
     let temp_loading = document.querySelector("#temp_loading");
     temp_loading.style.display = "none";
-    that.$store.commit("setIsDeleteFile", Boolean(Number(localStorage.getItem('isDeleteFile'))));
+    that.$store.commit(
+      "setIsDeleteFile",
+      Boolean(Number(localStorage.getItem("isDeleteFile")))
+    );
+    that.loginForStorage();
   },
   watch: {
     $route(to, from) {
@@ -48,6 +53,19 @@ export default {
     },
   },
   methods: {
+    async loginForStorage() {
+      let that = this;
+      let result = await storageLogin({
+        account: config.storage.account,
+        pass: that.$md5(config.storage.pass),
+      });
+      if (result.code !== 200)
+        return that.$hint({
+          msg: "登录Storage失败，可能无法上传，请联系处理",
+          type: "error",
+        });
+      that.$store.commit("setStoreageToken", result.token);
+    },
     reload() {
       this.isRouterAlive = false;
       this.$nextTick(() => {

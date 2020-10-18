@@ -67,7 +67,6 @@
 import * as api from "@api";
 import { saveItemObj } from "@/plugins/util.js";
 import { required } from "vuelidate/lib/validators";
-const IS_DEV = require("@/plugins/cfg").isdev;
 export default {
   name: "login",
   validations: {

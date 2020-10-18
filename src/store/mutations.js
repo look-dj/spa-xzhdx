@@ -25,6 +25,9 @@ const mutations = {
   setIsDeleteFile(state, bool) {
     state.isDeleteFile = bool;
   },
+  setStoreageToken(state, token) {
+    state.storeageToken = token;
+  },
 };
 
 export default mutations;

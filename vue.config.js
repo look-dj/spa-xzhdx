@@ -1,6 +1,6 @@
 const path = require("path");
 const resolve = (dir) => path.join(__dirname, dir);
-const IS_DEV = require("./src/plugins/cfg.js").isdev;
+const IS_DEV = require("./src/plugins/config.js").isdev;
 const TerserPlugin = require("terser-webpack-plugin");
 const CompressionWebpackPlugin = require("compression-webpack-plugin");
 const productionGzipExtensions = ["js", "css"];
@@ -91,6 +91,7 @@ module.exports = {
       },
       '/storage': {
         target: 'http://127.0.0.1:9018',
+        // target: 'http://storage.luciferdj.cn',
         changeOrigin: true,
         ws: true,
         pathRewrite: {

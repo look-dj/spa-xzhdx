@@ -12,7 +12,8 @@ const store = new Vuex.Store({
 		menu: [],
 		mid: "", // 第几个菜单被激活
 		side: false,
-		isDeleteFile: false, //  删除数据时是否连同删除图片
+    isDeleteFile: false, //  删除数据时是否连同删除图片
+    storeageToken: ''
 	},
 	mutations,
 	getters,

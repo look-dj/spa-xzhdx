@@ -1,11 +1,13 @@
 import service from "./axios.js";
 import axios from "axios";
+import store from "@/store/index";
 import { checkObjectIsEmpty } from "./util";
 let temp = {
 	$loading: () => ({
 		close: () => {},
 	}),
 };
+import Vue from "vue";
 //测试
 export function t(data, obj = {}) {
 	return fetch("/t", data, obj);
@@ -42,6 +44,7 @@ export function fetchMenu(data, obj = {}) {
 	return fetch("/spa/node/getMenu", data, obj);
 }
 export function getUserInfo(data, obj = {}) {
+	// console.log(store.state);
 	return fetch("/spa/user/getInfo", data, obj);
 }
 export function getAllColumnCount(data = {}, obj = {}) {
@@ -72,6 +75,15 @@ export class Api {
 	}
 }
 //上传文件
+export async function storageLogin(data) {
+	try {
+		let result = await axios.post("/storage/login", data);
+		return result.data;
+	} catch (e) {
+		console.error(e);
+		return false;
+	}
+}
 export async function upload(data, obj = {}, deletePath = "") {
 	obj = obj.$loading ? obj : temp;
 	let o = obj.$loading();
@@ -81,6 +93,7 @@ export async function upload(data, obj = {}, deletePath = "") {
 		let result = await axios.post("/storage/upload/image", fm, {
 			headers: {
 				"Content-type": "multipart/form-data",
+				authorization: `look-dj ${store.state.storeageToken}`,
 			},
 		});
 		o.close();
@@ -133,7 +146,15 @@ export async function upload2(data, obj = {}, deletePath = "") {
 //删除上传的文件
 export async function deleteFile(data) {
 	try {
-		let result = await fetch("/storage/delete/image", {name: data});
+		let result = await fetch(
+			"/storage/delete/image",
+			{ name: data },
+			"post",
+			{
+				"Content-Type": "application/json;charset=UTF-8",
+				authorization: `look-dj ${store.state.storeageToken}`,
+			}
+		);
 		return result;
 	} catch (e) {
 		console.log(e);

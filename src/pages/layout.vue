@@ -142,10 +142,9 @@
   </div>
 </template>
 <script>
-import cfg from "@/plugins/cfg.js";
 import { getItemObj } from "@/plugins/util.js";
 import { fetchMenu } from "@api";
-const IS_DEV = require("@/plugins/cfg").isdev;
+const IS_DEV = require("@/plugins/config").isdev;
 const indexPath = IS_DEV ? "http://127.0.0.1:7001" : "http://luciferdj.cn";
 export default {
   name: "layout",

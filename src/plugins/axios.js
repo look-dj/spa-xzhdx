@@ -1,21 +1,18 @@
 import axios from "axios";
-const isdev = require("./cfg.js").isdev;
+const isdev = require("./config.js").isdev;
 import router from "@/router/router.js";
 import Vue from "vue";
 let token = localStorage.getItem("token");
 /**
  * code为402没有查到数据
  */
-const whiteList = ["/spa/login", "/spa/register"];
+const whiteList = ["/spa/login", "/spa/register",];
 const Service = axios.create({
 	timeout: 20000,
   // baseURL: isdev?"/api":'',
   baseURL: "",
 	method: "post",
 	withCredentials: true,
-	// headers: {
-	//   "Authorization": `Bearer ${token}`
-	// }
 });
 Service.interceptors.request.use(
 	(config) => {

@@ -196,7 +196,6 @@
 import { Api, upload, deleteFile } from "@api";
 import { required } from "vuelidate/lib/validators";
 import { checkObjectIsEmpty } from "@/plugins/util.js";
-import cfg from "@/plugins/cfg.js";
 export default {
   inject: ["reload"],
   name: "column",
@@ -256,12 +255,21 @@ export default {
     },
     tps: [],
     nid: null,
+    vueComponents: []
   }),
   async mounted() {
     let that = this;
     that.nid = that.$route.query.nid;
     that.columnQueryAll();
     that.getTps();
+    let components =  require.context('./tp/', false, /\.vue$/).keys();
+    that.vueComponents = components.map(c => {
+      return {
+        name: c.split('/')[1],
+        path: c.split('.')[1].split('.')[0]
+      }
+    });
+    console.log(that.vueComponents);
   },
   methods: {
     c_addColumn() {
