@@ -9,7 +9,8 @@ let token = localStorage.getItem("token");
 const whiteList = ["/spa/login", "/spa/register"];
 const Service = axios.create({
 	timeout: 20000,
-	baseURL: isdev?"/api":'',
+  // baseURL: isdev?"/api":'',
+  baseURL: "",
 	method: "post",
 	withCredentials: true,
 	// headers: {
@@ -18,7 +19,7 @@ const Service = axios.create({
 });
 Service.interceptors.request.use(
 	(config) => {
-		console.log(config)
+		// console.log(config)
 		if (config.data.token) {
 			token = config.data.token;
 			config.headers.Authorization = `Bearer ${config.data.token}`;
@@ -50,6 +51,7 @@ Service.interceptors.request.use(
 // 添加响应拦截器
 Service.interceptors.response.use(
 	(response) => {
+    // console.log(response)
 		if (Number(response.data.code) > 350) {
 			new Vue().bus.$hint({
 				msg: response.data.msg,

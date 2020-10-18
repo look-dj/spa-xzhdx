@@ -1,26 +1,47 @@
 <template>
-  <v-container fluid :class="$vuetify.breakpoint.xs ? 'moble_container' : 'px-12'">
+  <v-container
+    fluid
+    :class="$vuetify.breakpoint.xs ? 'moble_container' : 'px-12'"
+  >
     <!-- <v-subheader>{{$vuetify.breakpoint.xs?'境界':'境界介绍'}}</v-subheader> -->
-    <v-subheader v-if="sonColumn.length>0">
+    <v-subheader v-if="sonColumn.length > 0">
       <span>子栏目:</span>
-      <v-btn small class="mx-2" text v-for="(item,idx) in sonColumn" :key="idx">{{item.name}}</v-btn>
+      <v-btn
+        small
+        class="mx-2"
+        text
+        v-for="(item, idx) in sonColumn"
+        :key="idx"
+        >{{ item.name }}</v-btn
+      >
     </v-subheader>
     <v-card class="px-6">
       <v-toolbar flat>
-        <v-btn text @click="dialog=true;" :style="[theme.bg_p,theme.co]" :small="$vuetify.breakpoint.xs?true:false">+添加新境界</v-btn>
+        <v-btn
+          text
+          @click="dialog = true"
+          :style="[theme.bg_p, theme.co]"
+          :small="$vuetify.breakpoint.xs ? true : false"
+          >+添加新境界</v-btn
+        >
         <v-spacer></v-spacer>
-        <v-btn text :style="[theme.bg_p,theme.co]" :small="$vuetify.breakpoint.xs?true:false">搜索</v-btn>
+        <v-btn
+          text
+          :style="[theme.bg_p, theme.co]"
+          :small="$vuetify.breakpoint.xs ? true : false"
+          >搜索</v-btn
+        >
       </v-toolbar>
       <v-data-table disable-sort :items="items" :headers="headers">
-        <template v-slot:item.oper="{item}">
+        <template v-slot:item.oper="{ item }">
           <v-btn
             fab
             x-small
             depressed
             title="删除"
             class="mx-1"
-            @click="realmDelete(item.id)"
-            :style="[theme.bg_a,theme.co_p]"
+            @click="realmDelete(item)"
+            :style="[theme.bg_a, theme.co_p]"
           >
             <v-icon>iconfont iconfont-customerarchivesrecycleBin</v-icon>
           </v-btn>
@@ -31,7 +52,7 @@
             title="修改"
             class="mx-1"
             @click="realmEdit(item.id)"
-            :style="[theme.bg_a,theme.co_p]"
+            :style="[theme.bg_a, theme.co_p]"
           >
             <v-icon>iconfont iconfont-basepermissionapproveApply</v-icon>
           </v-btn>
@@ -40,16 +61,31 @@
     </v-card>
     <v-dialog v-model="dialog" fullscreen persistent hide-overlay>
       <v-card class="d-flex align-center flex-column" v-if="dialog">
-        <v-card-title class="justify-center text-h5">{{dialogType==="add"?'添加新境界':"更新境界"}}</v-card-title>
+        <v-card-title class="justify-center text-h5">{{
+          dialogType === "add" ? "添加新境界" : "更新境界"
+        }}</v-card-title>
         <v-col cols="12" md="8">
           <v-card-text>
             <v-row>
-              <upload type="auto" cols="6" v-model="imgFile" :src="realmModel.pic"></upload>
+              <upload
+                type="auto"
+                cols="6"
+                v-model="imgFile"
+                :src="realmModel.pic"
+              ></upload>
               <v-col cols="6" height="100">
-                <v-text-field label="境界名称" v-model="realmModel.name"></v-text-field>
+                <v-text-field
+                  label="境界名称"
+                  v-model="realmModel.name"
+                ></v-text-field>
               </v-col>
               <v-col cols="12" height="100">
-                <v-textarea label="大致介绍" solo auto-grow v-model="realmModel.introduce"></v-textarea>
+                <v-textarea
+                  label="大致介绍"
+                  solo
+                  auto-grow
+                  v-model="realmModel.introduce"
+                ></v-textarea>
               </v-col>
             </v-row>
           </v-card-text>
@@ -59,14 +95,16 @@
             width="100"
             class="mx-3"
             @click="submit(dialogType)"
-            :style="[theme.bg_p,theme.co]"
-          >{{dialogType==="add"?'添加新境界':"更新境界"}}</v-btn>
+            :style="[theme.bg_p, theme.co]"
+            >{{ dialogType === "add" ? "添加新境界" : "更新境界" }}</v-btn
+          >
           <v-btn
             width="100"
             class="mx-3"
-            @click="realmModelReset(1);"
-            :style="[theme.bg_p,theme.co]"
-          >关闭</v-btn>
+            @click="realmModelReset(1)"
+            :style="[theme.bg_p, theme.co]"
+            >关闭</v-btn
+          >
         </v-card-actions>
       </v-card>
     </v-dialog>
@@ -136,10 +174,15 @@ export default {
       if (checkObjectIsEmpty(that.imgFile))
         return that.$hint({ msg: "请选择上传的图片", type: "error" });
       try {
-        let result0 = await upload(that.imgFile, that);
+        let imgResult = await upload(that.imgFile, that);
+        if (imgResult.code !== 200) {
+          return that.$hint({
+            msg: "上传图片失败",
+            type: "error",
+          });
+        }
+        that.realmModel.pic = imgResult.path;
         that.realmModel.date = new Date().valueOf();
-        that.realmModel.pic = result0.code === 200 ? result0.data : "";
-        if (!result0) return that.$hint({ msg: "上传图片失败", type: "error" });
         let result = await that.api.add(that.realmModel, that);
         that.$hint({ msg: result.msg });
         that.realmModelReset();
@@ -150,9 +193,17 @@ export default {
     async realmUpdate() {
       let that = this;
       if (!checkObjectIsEmpty(that.imgFile)) {
-        let res = await upload(that.imgFile, that, that.realmModel.pic);
-        that.realmModel.pic = res.code === 200 ? res.data : "";
-        if (!res) return that.$hint({ msg: "上传图片失败", type: "error" });
+        let pic_params = that.$store.state.isDeleteFile
+          ? that.realmModel.pic
+          : "";
+        let imgResult = await upload(that.imgFile, that, pic_params);
+        if (imgResult.code !== 200) {
+          return that.$hint({
+            msg: "上传图片失败",
+            type: "error",
+          });
+        }
+        that.realmModel.pic = imgResult.path;
       }
       that.realmModel.date = new Date().valueOf();
       try {
@@ -182,17 +233,19 @@ export default {
         that.dialog = true;
       }
     },
-    async realmDelete(id) {
+    async realmDelete(params) {
       let that = this;
       that.$toast({ msg: "确定要删除这方境界吗？" });
       that.bus.$on("toastConfirm", async function () {
-        let result = await that.realmRead(id);
-        if (result.pic) {
-          let result0 = await deleteFile({ path: result.pic }, that);
-        }
         try {
-          let result1 = await that.api.delete({ id }, that);
-          that.$hint({ msg: "删除成功" });
+          let result = await that.api.delete({ id: params.id }, that);
+          if (params.pic.length > 0 && that.$store.state.isDeleteFile) {
+            await deleteFile(params.pic);
+          }
+          that.$hint({
+            msg: result.msg,
+            type: result.code === 200 ? "success" : "error",
+          });
           that.realmQueryAll();
         } catch (e) {
           console.log(e);

@@ -1,27 +1,50 @@
 <template>
-  <v-container fluid :class="$vuetify.breakpoint.xs ? 'moble_container' : 'px-12'">
-    <v-subheader>{{$vuetify.breakpoint.xs?'势力':'势力划分'}}</v-subheader>
-    <v-subheader v-if="sonColumn.length>0">
+  <v-container
+    fluid
+    :class="$vuetify.breakpoint.xs ? 'moble_container' : 'px-12'"
+  >
+    <v-subheader>{{
+      $vuetify.breakpoint.xs ? "势力" : "势力划分"
+    }}</v-subheader>
+    <v-subheader v-if="sonColumn.length > 0">
       <span>子栏目:</span>
-      <v-btn small class="mx-2" text v-for="(item,idx) in sonColumn" :key="idx">{{item.name}}</v-btn>
+      <v-btn
+        small
+        class="mx-2"
+        text
+        v-for="(item, idx) in sonColumn"
+        :key="idx"
+        >{{ item.name }}</v-btn
+      >
     </v-subheader>
     <v-card class="px-6">
       <v-toolbar flat>
-        <v-btn text @click="dialog=true;" :style="[theme.bg_p,theme.co]" :small="$vuetify.breakpoint.xs?true:false">+添加新势力</v-btn>
+        <v-btn
+          text
+          @click="dialog = true"
+          :style="[theme.bg_p, theme.co]"
+          :small="$vuetify.breakpoint.xs ? true : false"
+          >+添加新势力</v-btn
+        >
         <v-spacer></v-spacer>
-        <v-btn text :style="[theme.bg_p,theme.co]" :small="$vuetify.breakpoint.xs?true:false">搜索</v-btn>
+        <v-btn
+          text
+          :style="[theme.bg_p, theme.co]"
+          :small="$vuetify.breakpoint.xs ? true : false"
+          >搜索</v-btn
+        >
       </v-toolbar>
 
       <v-data-table disable-sort :items="items" :headers="headers">
-        <template v-slot:item.oper="{item}">
+        <template v-slot:item.oper="{ item }">
           <v-btn
             fab
             x-small
             depressed
             title="删除"
             class="mx-1"
-            @click="factionDelete(item.id)"
-            :style="[theme.bg_a,theme.co_p]"
+            @click="factionDelete(item)"
+            :style="[theme.bg_a, theme.co_p]"
           >
             <v-icon>iconfont iconfont-customerarchivesrecycleBin</v-icon>
           </v-btn>
@@ -32,7 +55,7 @@
             title="修改"
             class="mx-1"
             @click="factionEdit(item.id)"
-            :style="[theme.bg_a,theme.co_p]"
+            :style="[theme.bg_a, theme.co_p]"
           >
             <v-icon>iconfont iconfont-basepermissionapproveApply</v-icon>
           </v-btn>
@@ -46,17 +69,40 @@
         <v-col cols="12" md="8">
           <v-card-text>
             <v-row>
-              <upload type="auto" cols="12" v-model="imgFile" :src="factionModel.pic"></upload>
+              <upload
+                type="auto"
+                cols="12"
+                v-model="imgFile"
+                :src="factionModel.pic"
+              ></upload>
               <v-col cols="6" height="100" class="px-10">
-                <v-text-field label="势力名称" v-model="factionModel.name"></v-text-field>
-                <v-text-field label="年代" v-model="factionModel.years"></v-text-field>
+                <v-text-field
+                  label="势力名称"
+                  v-model="factionModel.name"
+                ></v-text-field>
+                <v-text-field
+                  label="年代"
+                  v-model="factionModel.years"
+                ></v-text-field>
               </v-col>
               <v-col cols="6" height="100" class="px-10">
-                <v-text-field label="统治者" v-model="factionModel.lead"></v-text-field>
-                <v-select label="当前状态" :items="['兴盛','羸弱']" v-model="factionModel.state"></v-select>
+                <v-text-field
+                  label="统治者"
+                  v-model="factionModel.lead"
+                ></v-text-field>
+                <v-select
+                  label="当前状态"
+                  :items="['兴盛', '羸弱']"
+                  v-model="factionModel.state"
+                ></v-select>
               </v-col>
               <v-col cols="12">
-                <v-textarea label="大致介绍" solo auto-grow v-model="factionModel.introduce"></v-textarea>
+                <v-textarea
+                  label="大致介绍"
+                  solo
+                  auto-grow
+                  v-model="factionModel.introduce"
+                ></v-textarea>
               </v-col>
             </v-row>
           </v-card-text>
@@ -66,14 +112,16 @@
             width="100"
             class="mx-3"
             @click="submit(dialogType)"
-            :style="[theme.bg_p,theme.co]"
-          >提交</v-btn>
+            :style="[theme.bg_p, theme.co]"
+            >提交</v-btn
+          >
           <v-btn
             width="100"
             class="mx-3"
-            @click="factionModelReset(1);"
-            :style="[theme.bg_p,theme.co]"
-          >关闭</v-btn>
+            @click="factionModelReset(1)"
+            :style="[theme.bg_p, theme.co]"
+            >关闭</v-btn
+          >
         </v-card-actions>
       </v-card>
     </v-dialog>
@@ -149,10 +197,15 @@ export default {
       if (checkObjectIsEmpty(that.imgFile))
         return that.$hint({ msg: "请选择上传的图片", type: "error" });
       try {
-        let result0 = await upload(that.imgFile, that);
+        let imgResult = await upload(that.imgFile, that);
+        if (imgResult.code !== 200) {
+          return that.$hint({
+            msg: "上传图片失败",
+            type: "error",
+          });
+        }
+        that.factionModel.pic = imgResult.path;
         that.factionModel.date = new Date().valueOf();
-        that.factionModel.pic = result0.code === 200 ? result0.data : "";
-        if (!result0) return that.$hint({ msg: "上传图片失败", type: "error" });
         let result = await that.api.add(that.factionModel, that);
         that.$hint({ msg: result.msg });
         that.factionModelReset();
@@ -163,13 +216,19 @@ export default {
     async factionUpdate() {
       let that = this;
       if (!checkObjectIsEmpty(that.imgFile)) {
-        let res = await upload(that.imgFile, that, that.factionModel.pic);
-        if (res.code != 200)
-          return that.$hint({ msg: "上传图片失败", type: "error" });
-        that.factionModel.pic = res.code === 200 ? res.data : "";
+        let pic_params = that.$store.state.isDeleteFile
+          ? that.factionModel.pic
+          : "";
+        let imgResult = await upload(that.imgFile, that, pic_params);
+        if (imgResult.code !== 200) {
+          return that.$hint({
+            msg: "上传图片失败",
+            type: "error",
+          });
+        }
+        that.factionModel.pic = imgResult.path;
       }
       that.factionModel.date = new Date().valueOf();
-      console.log(that.factionModel);
       try {
         let result = await that.api.update(that.factionModel, that);
         that.factionModelReset();
@@ -194,17 +253,19 @@ export default {
       that.dialogType = "edit";
       that.dialog = true;
     },
-    async factionDelete(id) {
+    async factionDelete(params) {
       let that = this;
       that.$toast({ msg: "确定要删除这方势力吗？" });
       that.bus.$on("toastConfirm", async function () {
-        let result = await that.factionRead(id);
-        if (result.pic) {
-          let result0 = await deleteFile({ path: result.pic });
-        }
         try {
-          let result1 = await that.api.delete({ id }, that);
-          that.$hint({ msg: "删除成功" });
+          let result = await that.api.delete({ id: params.id }, that);
+          if (params.pic.length > 0 && that.$store.state.isDeleteFile) {
+            deleteFile(params.pic);
+          }
+          that.$hint({
+            msg: result.msg,
+            type: result.code === 200 ? "success" : "error",
+          });
           that.factionQueryAll();
         } catch (e) {
           console.log(e);

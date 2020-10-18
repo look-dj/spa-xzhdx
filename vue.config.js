@@ -81,14 +81,22 @@ module.exports = {
     host: 'localhost',//target host
     port: 8080,
     proxy: {
-      '/api': {
+      '/spa': {
           target: 'http://127.0.0.1:9017',
           changeOrigin: true,
           ws: true,
           pathRewrite: {
-            '^/api': '/'
+            '^/spa': '/spa/'
           }
-      }
+      },
+      '/storage': {
+        target: 'http://127.0.0.1:9018',
+        changeOrigin: true,
+        ws: true,
+        pathRewrite: {
+          '^/storage': '/storage/'
+        }
+    }
     }
   },
   configureWebpack: {

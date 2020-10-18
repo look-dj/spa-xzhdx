@@ -1,12 +1,12 @@
 <template>
   <div class="box">
     <v-card
-      v-if="type=='setting'"
+      v-if="type == 'setting'"
       flat
-      :color="$vuetify.theme.dark?'#1E1E1E':'#f8f8f8'"
+      :color="$vuetify.theme.dark ? '#1E1E1E' : '#f8f8f8'"
       class="v-card"
     >
-      <v-card flat :color="$vuetify.theme.dark?'#1E1E1E':'#f8f8f8'">
+      <v-card flat :color="$vuetify.theme.dark ? '#1E1E1E' : '#f8f8f8'">
         <v-card-title>
           <span>设置</span>
           <v-spacer></v-spacer>
@@ -14,29 +14,40 @@
             <v-icon>iconfont-guanbi1</v-icon>
           </v-btn>
         </v-card-title>
-        <v-card-text>
-          <span class="text-h6">修改主题</span>
-          <v-sheet :color="$vuetify.theme.dark?'#1E1E1E':'#f8f8f8'" class="px-2">
+        <v-card-text class="px-2">
+          <span class="text-h6 px-2">修改主题</span>
+          <v-sheet
+            :color="$vuetify.theme.dark ? '#1E1E1E' : '#f8f8f8'"
+            class="px-2"
+          >
             <v-chip
               class="ma-2"
-              v-for="(item,idx) in themes"
+              v-for="(item, idx) in themes"
               :key="idx"
               @click="changeTheme(item)"
-              :color="active_theme==item?theme.bg_p.background:''"
+              :color="active_theme == item ? theme.bg_p.background : ''"
             >
-              <span :style="`color:${active_theme===item?theme.co.color:''};`">{{item}}</span>
+              <span
+                :style="`color:${active_theme === item ? theme.co.color : ''};`"
+                >{{ item }}</span
+              >
             </v-chip>
-            <v-card-text class="d-flex align-center">
+            <v-card-text class="d-flex align-center pa-0">
               <v-subheader>深色模式</v-subheader>
               <v-spacer></v-spacer>
               <v-switch v-model="darkState"></v-switch>
+            </v-card-text>
+            <v-card-text class="d-flex align-center pa-0">
+              <v-subheader>连同删除图片</v-subheader>
+              <v-spacer></v-spacer>
+              <v-switch v-model="isDeleteFile"></v-switch>
             </v-card-text>
           </v-sheet>
         </v-card-text>
       </v-card>
     </v-card>
 
-    <v-card v-if="type=='user'" flat color="#f8f8f8" class="v-card">
+    <v-card v-if="type == 'user'" flat color="#f8f8f8" class="v-card">
       <v-card flat color="#f8f8f8">
         <v-card-title>
           <span>我的信息</span>
@@ -59,7 +70,9 @@
           </v-card>
         </v-card-text>
         <v-card-actions class="justify-end">
-          <v-btn text class="mr-5" :style="[theme.bg_p,theme.co]">修改信息</v-btn>
+          <v-btn text class="mr-5" :style="[theme.bg_p, theme.co]"
+            >修改信息</v-btn
+          >
         </v-card-actions>
       </v-card>
     </v-card>
@@ -73,6 +86,7 @@ export default {
     dialog: false,
     active_theme: "",
     darkState: false,
+    isDeleteFile: false,
   }),
   props: {
     type: String,
@@ -81,6 +95,7 @@ export default {
     let that = this;
     if (localStorage.getItem("theme"))
       that.active_theme = localStorage.getItem("theme");
+    that.isDeleteFile = that.$store.state.isDeleteFile;
   },
   watch: {
     darkState(val) {
@@ -96,6 +111,10 @@ export default {
         localStorage.setItem("theme", "light");
       }
       this.$vuetify.theme.dark = val;
+    },
+    isDeleteFile(val) {
+      this.$store.commit("setIsDeleteFile", val);
+      localStorage.setItem("isDeleteFile", val ? 1 : 0);
     },
   },
   methods: {

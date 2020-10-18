@@ -14,8 +14,10 @@ export default {
     data: "",
   }),
   methods: {
-    test() {
-      this.$loading();
+    async test() {
+      let that = this;
+      let result = await api.upload2(that.file);
+      console.log(result);
     },
   },
   watch: {

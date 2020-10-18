@@ -1,23 +1,47 @@
 <template>
-  <v-container fluid :class="$vuetify.breakpoint.xs ? 'moble_container' : 'px-12'">
-    <v-subheader>{{$vuetify.breakpoint.xs?'节点':'节点设置'}}</v-subheader>
+  <v-container
+    fluid
+    :class="$vuetify.breakpoint.xs ? 'moble_container' : 'px-12'"
+  >
+    <v-subheader>{{
+      $vuetify.breakpoint.xs ? "节点" : "节点设置"
+    }}</v-subheader>
     <v-card class="px-6">
       <v-toolbar flat>
-        <v-btn text @click="dialog=true;" :style="[theme.bg_p,theme.co]" class="mr-2" :small="$vuetify.breakpoint.xs?true:false">+添加</v-btn>
-        <v-btn text :style="[theme.bg_p,theme.co]" :small="$vuetify.breakpoint.xs?true:false">更新</v-btn>
+        <v-btn
+          text
+          @click="dialog = true"
+          :style="[theme.bg_p, theme.co]"
+          class="mr-2"
+          :small="$vuetify.breakpoint.xs ? true : false"
+          >+添加</v-btn
+        >
+        <v-btn
+          text
+          :style="[theme.bg_p, theme.co]"
+          :small="$vuetify.breakpoint.xs ? true : false"
+          >更新</v-btn
+        >
       </v-toolbar>
-      <v-data-table align="center" :headers="headers" disable-sort :items="items">
-        <template v-slot:item.cid="{item}">{{item.cid==1?'Layout':item.cid}}</template>
-        <template v-slot:item.oper="{item}">
+      <v-data-table
+        align="center"
+        :headers="headers"
+        disable-sort
+        :items="items"
+      >
+        <template v-slot:item.cid="{ item }">{{
+          item.cid == 1 ? "Layout" : item.cid
+        }}</template>
+        <template v-slot:item.oper="{ item }">
           <v-btn
             fab
             x-small
             depressed
             title="删除"
             class="mx-1"
-            @click="nodeDelete(item.id)"
-            :style="[theme.bg_a,theme.co_p]"
-            v-if="item.canD==1"
+            @click="nodeDelete(item)"
+            :style="[theme.bg_a, theme.co_p]"
+            v-if="item.canD == 1"
           >
             <v-icon>iconfont iconfont-customerarchivesrecycleBin</v-icon>
           </v-btn>
@@ -28,8 +52,8 @@
             title="修改"
             class="mx-1"
             @click="editnode(item.id)"
-            v-if="item.canD==1"
-            :style="[theme.bg_a,theme.co_p]"
+            v-if="item.canD == 1"
+            :style="[theme.bg_a, theme.co_p]"
           >
             <v-icon>iconfont iconfont-basepermissionapproveApply</v-icon>
           </v-btn>
@@ -40,16 +64,22 @@
       <v-row justify="center" v-if="dialog">
         <v-col cols="8" class="pa-0 ma-0">
           <v-card class="pa-5">
-            <v-card-title
-              class="justify-center text-uppercase text-h5 py-2"
-            >{{dialogType=='add'?'添加':'更新'}}节点</v-card-title>
+            <v-card-title class="justify-center text-uppercase text-h5 py-2"
+              >{{ dialogType == "add" ? "添加" : "更新" }}节点</v-card-title
+            >
             <v-card-text>
               <v-row>
                 <v-col cols="6">
-                  <v-text-field label="节点名" v-model="nodeModel.call"></v-text-field>
+                  <v-text-field
+                    label="节点名"
+                    v-model="nodeModel.call"
+                  ></v-text-field>
                 </v-col>
                 <v-col cols="6">
-                  <v-text-field label="文档TIETLE" v-model="nodeModel.title"></v-text-field>
+                  <v-text-field
+                    label="文档TIETLE"
+                    v-model="nodeModel.title"
+                  ></v-text-field>
                 </v-col>
                 <v-col cols="6">
                   <v-text-field
@@ -69,10 +99,16 @@
                   ></v-select>
                 </v-col>
                 <v-col cols="4">
-                  <v-text-field label="URL路径==>VUE" v-model="nodeModel.v_path"></v-text-field>
+                  <v-text-field
+                    label="URL路径==>VUE"
+                    v-model="nodeModel.v_path"
+                  ></v-text-field>
                 </v-col>
                 <v-col cols="4">
-                  <v-text-field label="VUE组件name" v-model="nodeModel.name"></v-text-field>
+                  <v-text-field
+                    label="VUE组件name"
+                    v-model="nodeModel.name"
+                  ></v-text-field>
                 </v-col>
                 <v-col cols="4" class="d-flex flex-row align-center">
                   <span>节点权限</span>
@@ -97,14 +133,16 @@
                   <v-sheet>
                     <v-btn
                       icon
-                      v-for="(icon,idx) in icons"
+                      v-for="(icon, idx) in icons"
                       :key="idx"
                       class="mx-1"
-                      :color="nodeModel.icon===icon?theme.bg_p.background:''"
-                      @click="nodeModel.icon=icon"
+                      :color="
+                        nodeModel.icon === icon ? theme.bg_p.background : ''
+                      "
+                      @click="nodeModel.icon = icon"
                       :title="icon"
                     >
-                      <v-icon>{{icon}}</v-icon>
+                      <v-icon>{{ icon }}</v-icon>
                     </v-btn>
                   </v-sheet>
                 </v-col>
@@ -119,14 +157,16 @@
                 width="120"
                 class="mx-2"
                 @click="submit(dialogType)"
-                :style="[theme.bg_p,theme.co]"
-              >{{dialogType=='add'?'提交':'更新节点'}}</v-btn>
+                :style="[theme.bg_p, theme.co]"
+                >{{ dialogType == "add" ? "提交" : "更新节点" }}</v-btn
+              >
               <v-btn
                 width="120"
                 class="mx-2"
                 @click="nodeModelReset(1)"
-                :style="[theme.bg_p,theme.co]"
-              >关闭</v-btn>
+                :style="[theme.bg_p, theme.co]"
+                >关闭</v-btn
+              >
             </v-card-actions>
           </v-card>
         </v-col>
@@ -290,7 +330,7 @@ export default {
         console.log(e);
       }
     },
-    async nodeDelete(id) {
+    async nodeDelete(params) {
       let that = this;
       that.$toast({
         msg: "确认删除吗？",
@@ -298,7 +338,7 @@ export default {
       that.bus.$on("toastConfirm", async function () {
         try {
           let result = await that.api.delete({
-            id,
+            id: params.id,
           });
           if (result.code === 200) {
             that.$store.dispatch("getRouter");

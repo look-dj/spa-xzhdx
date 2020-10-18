@@ -27,7 +27,7 @@ const Toast = (options = {}) => {
     el: document.createElement('div'),
     data: opts,
   })
-  const parent = instance.$('.v-application')
+  const parent = instance.$('#app')
   parent.appendChild(instance.$el);
   Vue.nextTick(() => {
     instance.bool = true

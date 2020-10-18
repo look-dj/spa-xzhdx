@@ -1,6 +1,8 @@
 <template>
-  <v-app v-if="isRouterAlive">
-    <router-view />
+  <v-app>
+    <div v-if="isRouterAlive">
+      <router-view />
+    </div>
   </v-app>
 </template>
 
@@ -38,6 +40,7 @@ export default {
     } else that.$store.commit("changeTheme", default_theme);
     let temp_loading = document.querySelector("#temp_loading");
     temp_loading.style.display = "none";
+    that.$store.commit("setIsDeleteFile", Boolean(Number(localStorage.getItem('isDeleteFile'))));
   },
   watch: {
     $route(to, from) {
@@ -71,8 +74,8 @@ export default {
               saveItemObj("router", _res.data);
             }
           }
-          that.$router.replace("/");
-          that.$hint({ msg: "自动登录成功" });
+          // that.$router.replace("/");
+          // that.$hint({ msg: "自动登录成功" });
         } else {
           that.$hint({ msg: "tokan验证失败", type: "error" });
           that.$router.replace("/login");

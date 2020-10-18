@@ -1,11 +1,27 @@
 <template>
-  <v-container ref="container" fluid :class="$vuetify.breakpoint.xs ? 'moble_container' : 'px-12'">
+  <v-container
+    ref="container"
+    fluid
+    :class="$vuetify.breakpoint.xs ? 'moble_container' : 'px-12'"
+  >
     <v-card class="px-6 pb-3" elevation="1">
       <v-toolbar flat>
-        <v-card-title>{{$vuetify.breakpoint.xs?'栏目':'栏目管理'}}</v-card-title>
+        <v-card-title>{{
+          $vuetify.breakpoint.xs ? "栏目" : "栏目管理"
+        }}</v-card-title>
         <v-spacer></v-spacer>
-        <v-btn class="mr-4" @click="c_addColumn" :style="[theme.bg_p,theme.co]" :small="$vuetify.breakpoint.xs?true:false">+添加栏目</v-btn>
-        <v-btn :style="[theme.bg_p,theme.co]" :small="$vuetify.breakpoint.xs?true:false">更新排序</v-btn>
+        <v-btn
+          class="mr-4"
+          @click="c_addColumn"
+          :style="[theme.bg_p, theme.co]"
+          :small="$vuetify.breakpoint.xs ? true : false"
+          >+添加栏目</v-btn
+        >
+        <v-btn
+          :style="[theme.bg_p, theme.co]"
+          :small="$vuetify.breakpoint.xs ? true : false"
+          >更新排序</v-btn
+        >
       </v-toolbar>
       <v-data-table
         :headers="headers"
@@ -15,15 +31,15 @@
         hide-default-footer
       >
         <!-- 名称 -->
-        <template v-slot:item.name="{item}">
-          <span>{{item.origin!==nid?item.name:'|—'+item.name}}</span>
+        <template v-slot:item.name="{ item }">
+          <span>{{ item.origin !== nid ? item.name : "|—" + item.name }}</span>
         </template>
         <!-- 是否显示 -->
-        <template v-slot:item.show="{item}">
-          <span>{{item.show?'显示':'隐藏'}}</span>
+        <template v-slot:item.show="{ item }">
+          <span>{{ item.show ? "显示" : "隐藏" }}</span>
         </template>
         <!-- 操作 -->
-        <template v-slot:item.oper="{item}">
+        <template v-slot:item.oper="{ item }">
           <v-btn
             fab
             x-small
@@ -31,7 +47,7 @@
             title="添加子项目"
             class="mx-1"
             @click="addSonCol(item)"
-            :style="[theme.bg_a,theme.co_p]"
+            :style="[theme.bg_a, theme.co_p]"
           >
             <v-icon>iconfont-ic_add_line</v-icon>
           </v-btn>
@@ -41,8 +57,8 @@
             depressed
             title="删除"
             class="mx-1"
-            @click="deleteColumn(item.id)"
-            :style="[theme.bg_a,theme.co_p]"
+            @click="deleteColumn(item)"
+            :style="[theme.bg_a, theme.co_p]"
           >
             <v-icon>iconfont iconfont-customerarchivesrecycleBin</v-icon>
           </v-btn>
@@ -53,7 +69,7 @@
             title="修改"
             class="mx-1"
             @click="editCol(item.id)"
-            :style="[theme.bg_a,theme.co_p]"
+            :style="[theme.bg_a, theme.co_p]"
           >
             <v-icon>iconfont iconfont-basepermissionapproveApply</v-icon>
           </v-btn>
@@ -63,7 +79,9 @@
     <!-- 添加栏目 -->
     <v-dialog v-model="dialog" fullscreen persistent hide-overlay>
       <v-card class="d-flex align-center flex-column" v-if="dialog">
-        <v-card-title class="justify-center text-h4">{{dialogType=='add'?'添加':'修改'}}栏目</v-card-title>
+        <v-card-title class="justify-center text-h4"
+          >{{ dialogType == "add" ? "添加" : "修改" }}栏目</v-card-title
+        >
         <v-col md="6">
           <v-card-text>
             <v-row dense>
@@ -77,7 +95,11 @@
                 ></v-text-field>
               </v-col>
               <v-col cols="6">
-                <v-text-field label="*栏目英文名称" v-model="columnModel.ename" required></v-text-field>
+                <v-text-field
+                  label="*栏目英文名称"
+                  v-model="columnModel.ename"
+                  required
+                ></v-text-field>
               </v-col>
               <v-col cols="6">
                 <v-select
@@ -115,17 +137,37 @@
                 </v-radio-group>
               </v-col>
               <v-col cols="6">
-                <v-text-field label="链接地址" v-model="columnModel.link"></v-text-field>
+                <v-text-field
+                  label="链接地址"
+                  v-model="columnModel.link"
+                ></v-text-field>
               </v-col>
               <v-col cols="6">
-                <v-text-field label="排序" v-model="columnModel.order"></v-text-field>
+                <v-text-field
+                  label="排序"
+                  v-model="columnModel.order"
+                ></v-text-field>
               </v-col>
               <v-col cols="6">
-                <v-text-field label="关键词" v-model="columnModel.keywords"></v-text-field>
+                <v-text-field
+                  label="关键词"
+                  v-model="columnModel.keywords"
+                ></v-text-field>
               </v-col>
-              <upload v-model="imgFile" :type="$vuetify.breakpoint.xs?'card':'auto'" cols="12" :src="columnModel.pic" ref="upload"></upload>
+              <upload
+                v-model="imgFile"
+                :type="$vuetify.breakpoint.xs ? 'card' : 'auto'"
+                cols="12"
+                :src="columnModel.pic"
+                ref="upload"
+              ></upload>
               <v-col cols="12">
-                <v-textarea label="栏目描述" solo auto-grow v-model="columnModel.description"></v-textarea>
+                <v-textarea
+                  label="栏目描述"
+                  solo
+                  auto-grow
+                  v-model="columnModel.description"
+                ></v-textarea>
               </v-col>
             </v-row>
           </v-card-text>
@@ -135,14 +177,16 @@
             width="100"
             class="mx-3"
             @click="submit(dialogType)"
-            :style="[theme.bg_p,theme.co]"
-          >{{dialogType=='add'?'提交':'确认修改'}}</v-btn>
+            :style="[theme.bg_p, theme.co]"
+            >{{ dialogType == "add" ? "提交" : "确认修改" }}</v-btn
+          >
           <v-btn
             width="100"
             class="mx-3"
-            @click="columnModelReset();"
-            :style="[theme.bg_p,theme.co]"
-          >关闭</v-btn>
+            @click="columnModelReset()"
+            :style="[theme.bg_p, theme.co]"
+            >关闭</v-btn
+          >
         </v-card-actions>
       </v-card>
     </v-dialog>
@@ -271,13 +315,14 @@ export default {
       if (type != "add") return that.updateColumn();
       that.$v.columnModel.$touch();
       if (!checkObjectIsEmpty(that.imgFile)) {
-        let res = await upload(that.imgFile);
-        that.columnModel.pic = res ? res.data : "";
-        if (!res)
+        let imgResult = await upload(that.imgFile, that);
+        if (imgResult.code !== 200) {
           return that.$hint({
             msg: "上传图片失败",
             type: "error",
           });
+        }
+        that.columnModel.pic = imgResult.path;
       } else {
         return that.$hint({
           msg: "请选择上传的图片",
@@ -362,13 +407,17 @@ export default {
       //   return console.log('请填写必填项')
       // }
       if (!checkObjectIsEmpty(that.imgFile)) {
-        let res = await upload(that.imgFile, that, that.columnModel.pic);
-        that.columnModel.pic = res ? res.data : "";
-        if (!res)
+        let pic_params = that.$store.state.isDeleteFile
+          ? that.columnModel.pic
+          : "";
+        let imgResult = await upload(that.imgFile, that, pic_params);
+        if (imgResult.code !== 200) {
           return that.$hint({
             msg: "上传图片失败",
             type: "error",
           });
+        }
+        that.columnModel.pic = imgResult.path;
       }
       let _res = await that.updateNode(that.columnModel);
       if (_res) {
@@ -416,24 +465,21 @@ export default {
         return false;
       }
     },
-    async deleteColumn(id) {
+    async deleteColumn(params) {
       let that = this;
       that.$toast({
         msg: "确认要删除这个栏目吗？",
       });
       that.bus.$on("toastConfirm", async function () {
-        let result = await that.readColumn(id);
-        if (result.pic) {
-          let result0 = await deleteFile({
-            path: result.pic,
-          });
-        }
-        let _res = await that.deleteNode(result.nid);
+        let _res = await that.deleteNode(params.nid);
         if (_res) {
           try {
             let result1 = await that.api.column.delete({
-              id,
+              id: params.id,
             });
+            if (params.pic && that.$store.state.isDeleteFile) {
+              deleteFile(params.pic);
+            }
             that.$hint({
               msg: result1.msg,
               type: result1.code === 200 ? "success" : "error",

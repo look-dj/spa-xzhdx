@@ -120,12 +120,21 @@
     <v-main class="v-main">
       <span v-if="temp_temp"></span>
       <v-row align="stretch" height="100%">
-        <v-col :cols="viewCols" class="view_col">
+        <v-col
+          :cols="viewCols"
+          class="view_col"
+          :class="$vuetify.breakpoint.xs ? 'xs_view_col' : ''"
+        >
           <transition name="slide">
             <router-view :key="viewKey" />
           </transition>
         </v-col>
-        <v-col :cols="sideCols" class="pa-0 ma-0" :class="$vuetify.breakpoint.xs ? 'xs_side_col' : 'side_col'" v-if="sideType!==''">
+        <v-col
+          :cols="sideCols"
+          class="pa-0 ma-0"
+          :class="$vuetify.breakpoint.xs ? 'xs_side_col' : 'side_col'"
+          v-if="sideType !== ''"
+        >
           <the-side :type="sideType" @close="closeSide"></the-side>
         </v-col>
       </v-row>
@@ -306,7 +315,6 @@ export default {
 .box {
   position: relative;
   width: 100%;
-  // height: calc(100% - 48px);
 }
 .logo {
   height: 100%;
@@ -317,22 +325,26 @@ export default {
   height: 100%;
 }
 .side_col {
-  height: calc(100vh - 48px);
   position: relative;
 }
-.xs_side_col{
-   height: calc(100vh - 48px);
+.xs_side_col {
   position: absolute;
   height: 100%;
   width: 60%;
   right: 0;
   top: 0;
+  z-index: 10;
 }
 .view_col {
   height: calc(100vh - 48px);
   overflow: auto;
   overflow-y: scroll;
   // padding-bottom: 48px;
+}
+.xs_view_col {
+  background-image: url("../assets/images/bg.jpg");
+  background-size: 100% 100%;
+  background-repeat: no-repeat;
 }
 .f12 {
   font-size: 12px;

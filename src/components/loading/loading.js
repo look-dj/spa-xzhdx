@@ -26,7 +26,7 @@ let loading = (options = {}) => {
 		data: opts,
 		vuetify: new vuetify()
 	})
-	let parent = instance.$('.v-application')
+	let parent = instance.$('#app')
 
 	parent.appendChild(instance.$el)
 	Vue.nextTick(() => {

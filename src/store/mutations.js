@@ -22,6 +22,9 @@ const mutations = {
   setSide(state, bool) {
     state.side = bool;
   },
+  setIsDeleteFile(state, bool) {
+    state.isDeleteFile = bool;
+  },
 };
 
 export default mutations;
