@@ -11,7 +11,7 @@ Router.prototype.replace = function(location) {
 };
 
 Vue.use(Router);
-let asyncRoutes = [
+let mainRouter = [
   {
     path: "/login",
     name: "login",
@@ -30,10 +30,20 @@ let asyncRoutes = [
     },
     component: () => import("../pages/register.vue"),
   },
+  {
+    path: "/error",
+    name: "error",
+    meta: {
+      title: "出现错误了",
+      auth: ["user"], // 普通的用户角色
+    },
+    component: () => import("../pages/error.vue"),
+  },
 ];
 let router = new Router({
-  mode: "hash",
+  mode: 'hash',
+  // base: "/spa/"decodeURI('/'),
   scrollBehavior: () => ({ y: 0 }),
-  routes: asyncRoutes,
+  routes: mainRouter,
 });
 export default router;

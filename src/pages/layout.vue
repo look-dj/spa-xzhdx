@@ -145,7 +145,7 @@
 import { getItemObj } from "@/plugins/util.js";
 import { fetchMenu } from "@api";
 const IS_DEV = require("@/plugins/config").isdev;
-const indexPath = IS_DEV ? "http://127.0.0.1:7001" : "http://luciferdj.cn";
+const indexPath = IS_DEV ? "http://127.0.0.1:9017" : "http://luciferdj.cn";
 export default {
   name: "layout",
   data: () => ({
@@ -312,6 +312,9 @@ export default {
       color: #fff !important;
     }
   }
+}
+.v-navigation-drawer__border{
+  opacity: 0;
 }
 </style>
 <style lang="scss" scoped>

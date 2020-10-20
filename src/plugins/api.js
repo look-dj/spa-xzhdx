@@ -43,9 +43,9 @@ export function fetchRouter(data, obj = {}) {
 export function fetchMenu(data, obj = {}) {
 	return fetch("/spa/node/getMenu", data, obj);
 }
-export function getUserInfo(data, obj = {}) {
+export function getUserInfo(data={}, obj = {}) {
 	// console.log(store.state);
-	return fetch("/spa/user/getInfo", data, obj);
+	return fetch("/spa/getUserInfo", data, obj);
 }
 export function getAllColumnCount(data = {}, obj = {}) {
 	return fetch("/spa/column/columnCount", data, obj);

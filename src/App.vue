@@ -83,7 +83,7 @@ export default {
       let token = getItemForStorage("token");
       if (!token) return;
       try {
-        let result = await getUserInfo({ token });
+        let result = await getUserInfo();
         if (result.code === 200) {
           saveItemObj("user", result.data);
           if (!getItemObj("router")) {

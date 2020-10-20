@@ -22,7 +22,8 @@ Service.interceptors.request.use(
 			config.headers.Authorization = `Bearer ${config.data.token}`;
 		}
 		if (config.method === "post") {
-			config.data = JSON.stringify(config.data);
+      config.data = JSON.stringify(config.data);
+      if(config.data==='{}') delete config.data;
 		}
 		let isInWhiteList = (s) => whiteList.some((w) => w === s);
 		if (!!!isInWhiteList(config.url)) {
@@ -48,8 +49,7 @@ Service.interceptors.request.use(
 // 添加响应拦截器
 Service.interceptors.response.use(
 	(response) => {
-    // console.log(response)
-		if (Number(response.data.code) > 350) {
+    if (Number(response.data.code) > 350) {
 			new Vue().bus.$hint({
 				msg: response.data.msg,
 				type: "error",
@@ -63,15 +63,16 @@ Service.interceptors.response.use(
 				msg: response.data.msg,
 				type: "error",
 			});
-			return response;
+			return response.data;
 		}
 	},
 	(error) => {
 		new Vue().bus.$hint({
 			msg: "出现错误啦。。。",
 			type: "error",
-		});
-		console.log(error);
+    });
+    new Vue().bus.$emit('error',error);
+    router.replace("/error");
 		return Promise.reject(error);
 	}
 );

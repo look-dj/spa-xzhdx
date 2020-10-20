@@ -28,6 +28,11 @@
         :headers="headers"
         disable-sort
         :items="items"
+        :footer-props="{
+          showFirstLastPage: false,
+          prevIcon: 'iconfont iconfont-ic_left_linedefuben',
+          nextIcon: 'iconfont iconfont-ic_right_line',
+        }"
       >
         <template v-slot:item.cid="{ item }">{{
           item.pid == 1 ? "Layout" : item.pid
@@ -223,15 +228,20 @@ export default {
     let that = this;
     that.nodeQueryAll();
     that.nodeModel.pid = that.parentNode[0].self;
-    let components = require.context("../view/", false, /\.vue$/).keys();
-    that.vueComponents = components.map((c) => {
-      return {
-        name: c.split("/")[1],
-        path: c.split(".")[1].split(".")[0],
-      };
-    });
+    that.getVueComponents();
   },
   methods: {
+    getVueComponents() {
+      let that = this;
+      let components = require.context("../view/", false, /\.vue$/).keys();
+      // let ignore = ["column"];
+      that.vueComponents = components.map((c) => {
+        return {
+          name: c.split("/")[1],
+          path: c.split(".")[1].split(".")[0],
+        };
+      });
+    },
     nodeModelReset(type = null) {
       let that = this;
       that.nodeModel = {
@@ -259,9 +269,7 @@ export default {
         });
       that.nodeModel.pid = _node.id;
       that.nodeModel.deep = Number(_node.deep) + 1;
-      that.nodeModel.component_name = that.nodeModel.component.split(
-        "/"
-      )[1];
+      that.nodeModel.component_name = that.nodeModel.component.split("/")[1];
       if (type !== "add") return that.nodeUpdate();
       try {
         let result = await that.api.add(that.nodeModel, that);

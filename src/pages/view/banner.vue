@@ -28,6 +28,11 @@
         :headers="headers"
         disable-sort
         :items="items"
+        :footer-props="{
+          showFirstLastPage: false,
+          prevIcon: 'iconfont iconfont-ic_left_linedefuben',
+          nextIcon: 'iconfont iconfont-ic_right_line',
+        }"
       >
         <!-- <template v-slot:item.cid="{item}">{{columnByCid[item.cid].name}}</template> -->
         <template v-slot:item.oper="{ item }">

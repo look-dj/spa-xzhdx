@@ -4,7 +4,6 @@ const IS_DEV = require("./src/plugins/config.js").isdev;
 const TerserPlugin = require("terser-webpack-plugin");
 const CompressionWebpackPlugin = require("compression-webpack-plugin");
 const productionGzipExtensions = ["js", "css"];
-const proxy = require('http-proxy-middleware');
 // const VuetifyLoaderPlugin = require("vuetify-loader/lib/plugin");
 module.exports = {
   //部署应用包时的基本 URL， 用法和 webpack 本身的 output.publicPath 一致。

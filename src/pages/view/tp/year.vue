@@ -32,8 +32,16 @@
           >搜索</v-btn
         >
       </v-toolbar>
-
-      <v-data-table disable-sort :items="items" :headers="headers">
+      <v-data-table
+        disable-sort
+        :items="items"
+        :headers="headers"
+        :footer-props="{
+          showFirstLastPage: false,
+          prevIcon: 'iconfont iconfont-ic_left_linedefuben',
+          nextIcon: 'iconfont iconfont-ic_right_line',
+        }"
+      >
         <template v-slot:item.oper="{ item }">
           <v-btn
             fab

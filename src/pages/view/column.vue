@@ -27,8 +27,11 @@
         :headers="headers"
         :items="items"
         disable-sort
-        disable-pagination
-        hide-default-footer
+        :footer-props="{
+          showFirstLastPage: false,
+          prevIcon: 'iconfont iconfont-ic_left_linedefuben',
+          nextIcon: 'iconfont iconfont-ic_right_line',
+        }"
       >
         <!-- 名称 -->
         <template v-slot:item.name="{ item }">
@@ -270,19 +273,28 @@ export default {
     that.nid = that.$route.query.nid;
     that.columnQueryAll();
     that.getHtmlList();
-    let components = require.context("./tp/", false, /\.vue$/).keys();
-    that.vueComponents = components.map((c) => {
-      return {
-        name: c.split("/")[1],
-        path: c.split(".")[1].split(".")[0],
-      };
-    });
-    that.columnModel.component = that.vueComponents[0].path;
+    that.getVueComponents();
+  },
+  watch: {
+    pagination(val) {
+      console.log(val);
+    },
   },
   methods: {
     c_addColumn() {
       let that = this;
       that.dialog = true;
+    },
+    getVueComponents() {
+      let that = this;
+      let components = require.context("./tp/", false, /\.vue$/).keys();
+      that.vueComponents = components.map((c) => {
+        return {
+          name: c.split("/")[1],
+          path: c.split(".")[1].split(".")[0],
+        };
+      });
+      that.columnModel.component = that.vueComponents[0].path;
     },
     columnModelReset(type = null) {
       let that = this;
@@ -314,9 +326,15 @@ export default {
     async columnQueryAll() {
       let that = this;
       try {
-        let result = await that.api.column.queryAll({}, that);
+        let result = await that.api.column.queryAll({},
+          that
+        );
+        if(result.code === 200){
+          that.items = result.data;
+          that.columnModel.pid = that.parents[0].self;
+        }
         that.items = result.code === 200 ? result.data : [];
-        that.columnModel.pid = that.parents[0].self;
+        
       } catch (e) {
         console.log(e);
       }
@@ -386,8 +404,10 @@ export default {
     async editCol(params) {
       let that = this;
       that.columnModel = params;
-      let pidModel = that.parents.find(p => p.nid === params.pid);
-      let component = that.vueComponents.find(c => c.component === params.component);
+      let pidModel = that.parents.find((p) => p.nid === params.pid);
+      let component = that.vueComponents.find(
+        (c) => c.component === params.component
+      );
       that.columnModel.component = component.path;
       that.columnModel.pid = pidModel.self;
       that.dialogType = "edit";

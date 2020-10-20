@@ -44,7 +44,17 @@
         </v-btn>
       </v-toolbar>
 
-      <v-data-table disable-sort :items="items" :headers="headers" show-select>
+      <v-data-table
+        disable-sort
+        :items="items"
+        :headers="headers"
+        show-select
+        :footer-props="{
+          showFirstLastPage: false,
+          prevIcon: 'iconfont iconfont-ic_left_linedefuben',
+          nextIcon: 'iconfont iconfont-ic_right_line',
+        }"
+      >
         <!-- <template v-slot:item.id="{item}">{{item-key}}</template> -->
         <template v-slot:item.oper="{ item }">
           <v-btn
