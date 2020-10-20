@@ -30,7 +30,7 @@
         :items="items"
       >
         <template v-slot:item.cid="{ item }">{{
-          item.cid == 1 ? "Layout" : item.cid
+          item.pid == 1 ? "Layout" : item.pid
         }}</template>
         <template v-slot:item.oper="{ item }">
           <v-btn
@@ -82,17 +82,18 @@
                   ></v-text-field>
                 </v-col>
                 <v-col cols="6">
-                  <v-text-field
-                    label="import引入路径"
-                    persistent-hint
-                    hint="请以/开头"
+                  <v-select
+                    label="选择VUE组件"
                     v-model="nodeModel.component"
-                  ></v-text-field>
+                    :items="vueComponents"
+                    item-text="name"
+                    item-value="path"
+                  ></v-select>
                 </v-col>
                 <v-col cols="6">
                   <v-select
                     label="父节点"
-                    v-model="nodeModel.cid"
+                    v-model="nodeModel.pid"
                     :items="parentNode"
                     item-text="call"
                     item-value="self"
@@ -101,13 +102,7 @@
                 <v-col cols="4">
                   <v-text-field
                     label="URL路径==>VUE"
-                    v-model="nodeModel.v_path"
-                  ></v-text-field>
-                </v-col>
-                <v-col cols="4">
-                  <v-text-field
-                    label="VUE组件name"
-                    v-model="nodeModel.name"
+                    v-model="nodeModel.component_path"
                   ></v-text-field>
                 </v-col>
                 <v-col cols="4" class="d-flex flex-row align-center">
@@ -212,21 +207,29 @@ export default {
     nodeModel: {
       title: "",
       call: "",
-      name: "",
+      component_name: "",
       icon: "",
-      cid: "",
+      pid: "",
       component: "",
-      v_path: "",
+      component_path: "",
       auth: "user",
     },
     icons: _icons,
     columns: [],
     api: new Api("node"),
+    vueComponents: [],
   }),
   async mounted() {
     let that = this;
     that.nodeQueryAll();
-    that.nodeModel.cid = that.parentNode[0].self;
+    that.nodeModel.pid = that.parentNode[0].self;
+    let components = require.context("../view/", false, /\.vue$/).keys();
+    that.vueComponents = components.map((c) => {
+      return {
+        name: c.split("/")[1],
+        path: c.split(".")[1].split(".")[0],
+      };
+    });
   },
   methods: {
     nodeModelReset(type = null) {
@@ -234,11 +237,11 @@ export default {
       that.nodeModel = {
         title: "",
         call: "",
-        name: "",
+        component_name: "",
         icon: "",
-        cid: that.parentNode[0].self,
-        component: "",
-        v_path: "",
+        pid: that.parentNode[0].self,
+        component: that.vueComponents[0].path,
+        component_path: "",
         auth: "user",
       };
       that.dialogType = "add";
@@ -248,14 +251,17 @@ export default {
     },
     async submit(type) {
       let that = this;
-      let _node = JSON.parse(that.nodeModel.cid);
+      let _node = JSON.parse(that.nodeModel.pid);
       if (_node.deep > 3)
         return that.$hint({
           msg: "节点过深",
           type: "error",
         });
-      that.nodeModel.cid = _node.id;
+      that.nodeModel.pid = _node.id;
       that.nodeModel.deep = Number(_node.deep) + 1;
+      that.nodeModel.component_name = that.nodeModel.component.split(
+        "/"
+      )[1];
       if (type !== "add") return that.nodeUpdate();
       try {
         let result = await that.api.add(that.nodeModel, that);
@@ -272,10 +278,10 @@ export default {
     async editnode(id) {
       let that = this;
       that.nodeModel = await that.nodeRead(id);
-      that.nodeModel.cid = that.parentNode.find(
-        (n) => n.id == that.nodeModel.cid
+      that.nodeModel.pid = that.parentNode.find(
+        (n) => n.id == that.nodeModel.pid
       );
-      that.nodeModel.cid = that.nodeModel.cid.self;
+      that.nodeModel.pid = that.nodeModel.pid.self;
       if (!that.nodeModel) return that.nodeModelReset(1);
       that.dialogType = "edit";
       that.dialog = true;
@@ -321,11 +327,11 @@ export default {
           n.order = n.id;
           if (n.deep !== 1) {
             n.call = " |—" + n.call;
-            n.order = Number(n.cid) + 0.1;
+            n.order = Number(n.pid) + 0.1;
           }
         });
         that.items.sort((a, b) => a.order - b.order);
-        // console.log(that.items);
+        console.log(that.items);
       } catch (e) {
         console.log(e);
       }
@@ -371,7 +377,7 @@ export default {
       });
       _items.unshift({
         call: "顶级节点",
-        cid: "1",
+        pid: "0",
         deep: 0,
         id: 1,
       });

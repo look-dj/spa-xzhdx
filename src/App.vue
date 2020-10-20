@@ -88,6 +88,7 @@ export default {
           saveItemObj("user", result.data);
           if (!getItemObj("router")) {
             let _res = await fetchRouter({ auth: result.data.auth });
+            console.log(_res)
             if (_res.code === 200) {
               saveItemObj("router", _res.data);
             }
@@ -146,7 +147,7 @@ html {
   }
 }
 ::-webkit-scrollbar-track {
-  background-color: transparent;
+  background-color: #fff;
 }
 .my-blue {
   background-color: #0094ff !important;

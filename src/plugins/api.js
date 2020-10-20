@@ -33,8 +33,8 @@ export function aboutUpdate(data, obj = {}) {
 	return fetch("/spa/site/update", data, obj);
 }
 //查询所有的html
-export function getTps(data, obj = {}) {
-	return fetch("/spa/file/getTps", data, obj);
+export function getHtmlList(data = {}, obj = {}) {
+	return fetch("/spa/column/getHtmlList", data, obj);
 }
 export function fetchRouter(data, obj = {}) {
 	// console.log(data);
@@ -114,41 +114,13 @@ export async function upload(data, obj = {}, deletePath = "") {
 		return false;
 	}
 }
-export async function upload2(data, obj = {}, deletePath = "") {
-	obj = obj.$loading ? obj : temp;
-	let o = obj.$loading();
-	let fm = new FormData();
-	fm.append("file", data);
-	try {
-		let result = await axios.post("/storage/upload/image", fm, {
-			headers: {
-				"Content-type": "multipart/form-data",
-			},
-		});
-		o.clase();
-		if (deletePath.length > 0 && result.data.code === 200) {
-			deleteFile(result.data.path);
-		}
-		if (result.status === 200) {
-			return result.data;
-		} else {
-			return {
-				code: 500,
-				msg: "上传图片失败，请稍后重试",
-			};
-		}
-	} catch (e) {
-		o.clase();
-		console.error(e);
-		return false;
-	}
-}
 //删除上传的文件
 export async function deleteFile(data) {
 	try {
 		let result = await fetch(
 			"/storage/delete/image",
 			{ name: data },
+			{},
 			"post",
 			{
 				"Content-Type": "application/json;charset=UTF-8",

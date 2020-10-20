@@ -68,7 +68,7 @@
             depressed
             title="修改"
             class="mx-1"
-            @click="editCol(item.id)"
+            @click="editCol(item)"
             :style="[theme.bg_a, theme.co_p]"
           >
             <v-icon>iconfont iconfont-basepermissionapproveApply</v-icon>
@@ -104,37 +104,27 @@
               <v-col cols="6">
                 <v-select
                   label="所属栏目"
-                  :items="origin"
+                  :items="parents"
                   item-text="name"
-                  item-value="nid"
-                  v-model="columnModel.origin"
+                  item-value="self"
+                  v-model="columnModel.pid"
                 ></v-select>
               </v-col>
               <v-col cols="6">
                 <v-select
-                  v-model="columnModel.template"
+                  v-model="columnModel.component"
                   label="*选择模板"
-                  :items="tps"
-                  item-text="call"
-                  item-value="self"
+                  :items="vueComponents"
+                  item-text="name"
+                  item-value="path"
                 ></v-select>
               </v-col>
-              <v-col cols="6" class="d-flex flex-row align-center">
-                <span>是否隐藏</span>
-                <v-radio-group row class="ml-10" v-model="columnModel.show">
-                  <v-radio
-                    label="显示"
-                    :value="1"
-                    off-icon="iconfont-weixuan"
-                    on-icon="iconfont-xuanzhong"
-                  ></v-radio>
-                  <v-radio
-                    label="隐藏"
-                    :value="0"
-                    off-icon="iconfont-weixuan"
-                    on-icon="iconfont-xuanzhong"
-                  ></v-radio>
-                </v-radio-group>
+              <v-col cols="6">
+                <v-select
+                  v-model="columnModel.html_template"
+                  label="*选择HTML模板"
+                  :items="htmlList"
+                ></v-select>
               </v-col>
               <v-col cols="6">
                 <v-text-field
@@ -153,6 +143,23 @@
                   label="关键词"
                   v-model="columnModel.keywords"
                 ></v-text-field>
+              </v-col>
+              <v-col cols="12" md="6" class="d-flex flex-row align-center">
+                <span>是否隐藏</span>
+                <v-radio-group row class="ml-10" v-model="columnModel.show">
+                  <v-radio
+                    label="显示"
+                    :value="1"
+                    off-icon="iconfont-weixuan"
+                    on-icon="iconfont-xuanzhong"
+                  ></v-radio>
+                  <v-radio
+                    label="隐藏"
+                    :value="0"
+                    off-icon="iconfont-weixuan"
+                    on-icon="iconfont-xuanzhong"
+                  ></v-radio>
+                </v-radio-group>
               </v-col>
               <upload
                 v-model="imgFile"
@@ -193,7 +200,7 @@
   </v-container>
 </template>
 <script>
-import { Api, upload, deleteFile } from "@api";
+import { Api, upload, deleteFile, getHtmlList } from "@api";
 import { required } from "vuelidate/lib/validators";
 import { checkObjectIsEmpty } from "@/plugins/util.js";
 export default {
@@ -242,34 +249,35 @@ export default {
     dialogType: "add",
     imgFile: {},
     columnModel: {
-      origin: "1",
+      pid: "1",
       name: "",
       show: "1",
       description: "",
       keywords: "",
       pic: "",
-      order: "",
-      template: "",
+      order: "1",
+      component: "",
       ename: "",
       link: "",
+      html_template: "",
     },
-    tps: [],
+    htmlList: [],
     nid: null,
-    vueComponents: []
+    vueComponents: [],
   }),
   async mounted() {
     let that = this;
     that.nid = that.$route.query.nid;
     that.columnQueryAll();
-    that.getTps();
-    let components =  require.context('./tp/', false, /\.vue$/).keys();
-    that.vueComponents = components.map(c => {
+    that.getHtmlList();
+    let components = require.context("./tp/", false, /\.vue$/).keys();
+    that.vueComponents = components.map((c) => {
       return {
-        name: c.split('/')[1],
-        path: c.split('.')[1].split('.')[0]
-      }
+        name: c.split("/")[1],
+        path: c.split(".")[1].split(".")[0],
+      };
     });
-    console.log(that.vueComponents);
+    that.columnModel.component = that.vueComponents[0].path;
   },
   methods: {
     c_addColumn() {
@@ -279,21 +287,23 @@ export default {
     columnModelReset(type = null) {
       let that = this;
       that.columnModel = {
-        origin: "1",
+        pid: "1",
         name: "",
         show: "1",
         description: "",
         keywords: "",
         pic: "",
         order: "",
-        template: "",
+        component: "",
         ename: "",
         link: "",
+        html_template: that.htmlList[0],
       };
       that.imgFile = {};
       // that.reload();
       that.dialog = false;
       that.dialogType = "add";
+      if (!type) that.columnQueryAll();
     },
     checkLink(params) {
       let that = this;
@@ -306,22 +316,30 @@ export default {
       try {
         let result = await that.api.column.queryAll({}, that);
         that.items = result.code === 200 ? result.data : [];
-        that.items = that.disposeItem;
+        that.columnModel.pid = that.parents[0].self;
       } catch (e) {
         console.log(e);
       }
     },
     async submit(type) {
       let that = this;
-      that.columnModel.template = JSON.parse(that.columnModel.template);
-      // return console.log(that.columnModel);
-      if (that.checkLink(that.columnModel))
-        return that.$hint({
-          msg: "link重复",
-          type: "error",
-        });
-      if (type != "add") return that.updateColumn();
+      let tempData = JSON.parse(that.columnModel.pid);
+      that.columnModel.pid = tempData.nid;
+      let nodeModel = {
+        deep: tempData.deep + 1,
+        pid: tempData.nid,
+        call: that.columnModel.name,
+        title: that.columnModel.name,
+        component: that.columnModel.component,
+        component_name: that.columnModel.component.split("/")[1],
+        component_path: that.columnModel.component,
+        auth: "user",
+        icon: "",
+        canD: 1,
+      };
+      delete that.columnModel.component;
       that.$v.columnModel.$touch();
+      if (type != "add") return that.updateColumn(nodeModel, that.columnModel);
       if (!checkObjectIsEmpty(that.imgFile)) {
         let imgResult = await upload(that.imgFile, that);
         if (imgResult.code !== 200) {
@@ -337,49 +355,18 @@ export default {
           type: "error",
         });
       }
-      let _res = await that.addNode();
-      if (_res) {
-        that.columnModel.nid = _res.insertId;
-        that.columnModel.template = that.columnModel.template.id;
-        try {
-          let result = await that.api.column.add(that.columnModel, that);
-          that.$hint({
-            msg: result.msg,
-            type: result.code === 200 ? "success" : "error",
-          });
-          that.reload();
-        } catch (e) {
-          console.log(e);
-        }
-      }
-    },
-    async addNode() {
-      let that = this;
-      let _node = that.columnModel.template;
-      let obj = {
-        deep: that.columnModel.origin == that.nid ? 2 : 3,
-        cid:
-          that.columnModel.origin == that.nid
-            ? that.nid
-            : that.columnModel.origin,
-        call: that.columnModel.name,
-        title: that.columnModel.name,
-        v_path: _node.v_path,
-        component: _node.component,
-        name: _node.name,
-        auth: "user",
-      };
       try {
-        let result = await that.api.node.add(obj, that);
-        if (result.code === 200) return result.data;
-        return false;
+        let result = await that.api.column.add(
+          { node: nodeModel, column: that.columnModel },
+          that
+        );
+        that.$hint({
+          msg: result.msg,
+          type: result.code === 200 ? "success" : "error",
+        });
+        that.reload();
       } catch (e) {
         console.log(e);
-        that.$hint({
-          msg: "添加失败",
-          type: "error",
-        });
-        return false;
       }
     },
     async readColumn(id) {
@@ -396,28 +383,25 @@ export default {
         console.log(e);
       }
     },
-    async editCol(id) {
+    async editCol(params) {
       let that = this;
-      that.columnModel = await that.readColumn(id);
-      // console.log(that.columnModel )
-      let _tmp = that.tps.find(
-        (t) => Number(t.id) === Number(that.columnModel.template)
-      );
-      that.columnModel.template = _tmp.self;
-      that.columnModel.origin = that.columnModel.origin.toString();
+      that.columnModel = params;
+      let pidModel = that.parents.find(p => p.nid === params.pid);
+      let component = that.vueComponents.find(c => c.component === params.component);
+      that.columnModel.component = component.path;
+      that.columnModel.pid = pidModel.self;
       that.dialogType = "edit";
       that.dialog = true;
     },
-    async updateColumn() {
+    async updateColumn(node, column) {
       let that = this;
       // that.$v.columnModel.$touch();
       // if(that.$v.columnModel.$invalid){
       //   return console.log('请填写必填项')
       // }
+      delete that.columnModel.deep;
       if (!checkObjectIsEmpty(that.imgFile)) {
-        let pic_params = that.$store.state.isDeleteFile
-          ? that.columnModel.pic
-          : "";
+        let pic_params = that.$store.state.isDeleteFile ? column.pic : "";
         let imgResult = await upload(that.imgFile, that, pic_params);
         if (imgResult.code !== 200) {
           return that.$hint({
@@ -425,52 +409,19 @@ export default {
             type: "error",
           });
         }
-        that.columnModel.pic = imgResult.path;
+        column.pic = imgResult.path;
       }
-      let _res = await that.updateNode(that.columnModel);
-      if (_res) {
-        try {
-          that.columnModel.template = that.columnModel.template.id;
-          let result = await that.api.column.update(that.columnModel, that);
-          if (result.code === 200) {
-            that.reload();
-          } else {
-            that.$hint({
-              msg: "修改失败",
-              type: "error",
-            });
-          }
-        } catch (e) {
-          console.log(e);
-        }
-      }
-    },
-    async updateNode(model) {
-      let that = this;
       try {
-        let template = model.template;
-        let obj = {
-          cid: model.origin == that.nid ? that.nid : model.origin,
-          v_path: template.v_path,
-          component: template.component,
-          name: template.name,
-          deep: model.origin == that.nid ? 2 : 3,
-          auth: "user",
-          call: model.name,
-          title: model.name,
-          id: model.nid,
-        };
-        // return console.log(obj);
-        let result = await that.api.node.update(obj, that);
-        if (result.code === 200) return true;
-        return false;
+        let result = await that.api.column.update({ node, column }, that);
+        that.$hint({
+          msg: result.msg,
+          type: result.code === 200 ? "success" : "error",
+        });
+        if (result.code === 200) {
+          that.columnModelReset();
+        }
       } catch (e) {
         console.log(e);
-        that.$hint({
-          msg: "删除失败",
-          type: "error",
-        });
-        return false;
       }
     },
     async deleteColumn(params) {
@@ -479,44 +430,24 @@ export default {
         msg: "确认要删除这个栏目吗？",
       });
       that.bus.$on("toastConfirm", async function () {
-        let _res = await that.deleteNode(params.nid);
-        if (_res) {
-          try {
-            let result1 = await that.api.column.delete({
-              id: params.id,
-            });
-            if (params.pic && that.$store.state.isDeleteFile) {
-              deleteFile(params.pic);
-            }
-            that.$hint({
-              msg: result1.msg,
-              type: result1.code === 200 ? "success" : "error",
-            });
-            that.reload();
-          } catch (e) {
-            console.log(e);
+        try {
+          let result = await that.api.column.delete({
+            id: params.id,
+            nid: params.nid,
+          });
+          if (params.pic && that.$store.state.isDeleteFile) {
+            deleteFile(params.pic);
           }
+          that.$hint({
+            msg: result.msg,
+            type: result.code === 200 ? "success" : "error",
+          });
+          if (result.code === 200) that.columnModelReset();
+        } catch (e) {
+          console.log(e);
         }
       });
     },
-    async deleteNode(id) {
-      let that = this;
-      try {
-        let result = await that.api.node.delete({
-          id,
-        });
-        if (result.code === 200) return true;
-        return false;
-      } catch (e) {
-        console.log(e);
-        that.$hint({
-          msg: "删除失败",
-          type: "error",
-        });
-        return false;
-      }
-    },
-
     async addSonCol(column) {
       let that = this;
       if (column.origin !== -1)
@@ -527,13 +458,14 @@ export default {
       that.columnModel.origin = column.id;
       that.dialog = true;
     },
-
-    async getTps() {
+    async getHtmlList() {
       let that = this;
       try {
-        let result = await that.api.tmp.queryAll();
-        that.tps = result.code === 200 ? result.data : [];
-        that.tps.map((t) => (t.self = JSON.stringify(t)));
+        let result = await getHtmlList();
+        if (result.code === 200) {
+          that.htmlList = result.data;
+          that.columnModel.html_template = result.data[0];
+        }
       } catch (e) {
         console.log(e);
       }
@@ -559,30 +491,23 @@ export default {
         tmp: new Api("tmp"),
       };
     },
-    origin() {
+    parents() {
       let that = this;
       let arr = [];
       arr.push({
         name: "顶级栏目",
-        nid: that.nid,
+        nid: 2,
+        deep: 1,
       });
-      that.items.forEach((item, idx) => {
+      that.items.forEach((item) => {
         arr.push(item);
       });
-      return arr;
-    },
-    disposeItem() {
-      let that = this;
-      let arr = that.items;
-      arr.forEach((item, idx) => {
-        if (item.origin == -1) {
-          item._order = Number(item.id);
-        } else {
-          item._order = Number(item.origin) + 0.1;
-        }
+      return arr.map((a) => {
+        return {
+          ...a,
+          self: JSON.stringify(a),
+        };
       });
-      arr.sort((a, b) => a._order - b._order);
-      return arr;
     },
     theme() {
       return this.$store.getters.getTheme;

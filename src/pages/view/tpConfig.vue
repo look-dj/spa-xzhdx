@@ -90,7 +90,7 @@
 </template>
 <script>
 // 项目介绍
-import { Api, getTps } from "@api";
+import { Api } from "@api";
 import { getItemObj } from "@/plugins/util.js";
 export default {
   name: "tpConfig",

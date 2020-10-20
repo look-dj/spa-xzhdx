@@ -190,7 +190,7 @@ export default {
         that.$store.commit("setMid", data.id);
         that.viewKey++;
         that.$router.push({
-          path: data.v_path,
+          path: data.component_path,
           query: { nid: data.id },
         });
       } catch (e) {
@@ -238,9 +238,7 @@ export default {
       let that = this;
       that.$toast({ msg: "确认要退出吗？" });
       that.bus.$on("toastConfirm", function () {
-        localStorage.removeItem("token");
-        localStorage.removeItem("router");
-        localStorage.removeItem("user");
+        localStorage.clear();
         that.$hint({ msg: "已完成退出", type: "error" });
         setTimeout(() => {
           that.$router.replace("/login");
@@ -250,6 +248,12 @@ export default {
     async getMenu() {
       let that = this;
       let _user = getItemObj("user");
+      if(!_user){
+        that.$hint({ msg: "获取 用户权限失败", type: "error" });
+        localStorage.clear();
+        that.$router.replace("/login");
+        return;
+      }
       try {
         let result = await fetchMenu({ auth: _user.auth });
         that.menu = result.code == 200 ? result.data : [];

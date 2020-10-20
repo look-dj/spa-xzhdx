@@ -64,9 +64,10 @@
   </v-container>
 </template>
 <script>
-import * as api from "@api";
+import {login as userLogin} from "@api";
 import { saveItemObj } from "@/plugins/util.js";
 import { required } from "vuelidate/lib/validators";
+import config from "@/plugins/config.js"
 export default {
   name: "login",
   validations: {
@@ -81,8 +82,8 @@ export default {
   },
   data: () => ({
     userModel: {
-      account: IS_DEV ? "root" : "",
-      password: IS_DEV ? "123123" : "",
+      account: config.isdev ? "root" : "",
+      password: config.isdev ? "123123" : "",
     },
     passState: false,
   }),
@@ -94,20 +95,7 @@ export default {
     // let inWhiteList = (s) => whiteList.some((w) => w === s);
     // console.log(inWhiteList("/home"))
   },
-  computed: {
-    accountErrors() {
-      const errors = [];
-      if (!this.$v.userModel.account.$dirty) return errors;
-      !this.$v.userModel.account.required && errors.push("请输入账号");
-      return errors;
-    },
-    passwordErrors() {
-      const errors = [];
-      if (!this.$v.userModel.password.$dirty) return errors;
-      !this.$v.userModel.password.required && errors.push("请输入密码");
-      return errors;
-    },
-  },
+
   methods: {
     async login() {
       let that = this;
@@ -119,7 +107,7 @@ export default {
       delete that.userModel.password;
       try {
         that.$loading({ msg: "登录" });
-        let result = await api.login(that.userModel, that);
+        let result = await userLogin(that.userModel, that);
         if (result.code === 200) {
           console.log(result);
           localStorage.setItem("token", result.data.token);
@@ -144,6 +132,20 @@ export default {
         account: "",
         password: "",
       };
+    },
+  },
+    computed: {
+    accountErrors() {
+      const errors = [];
+      if (!this.$v.userModel.account.$dirty) return errors;
+      !this.$v.userModel.account.required && errors.push("请输入账号");
+      return errors;
+    },
+    passwordErrors() {
+      const errors = [];
+      if (!this.$v.userModel.password.$dirty) return errors;
+      !this.$v.userModel.password.required && errors.push("请输入密码");
+      return errors;
     },
   },
 };

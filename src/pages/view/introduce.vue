@@ -16,7 +16,7 @@ export default {
   methods: {
     async test() {
       let that = this;
-      let result = await api.upload2(that.file);
+      let result = await api.upload(that.file);
       console.log(result);
     },
   },
