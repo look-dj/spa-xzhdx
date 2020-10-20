@@ -13,7 +13,7 @@ import Vuetify, {
   VSelect,
   VSheet,
   VTextField,
-} from "vuetify/lib";
+} from "vuetify";
 import zhHans from "vuetify/es5/locale/zh-Hans";
 Vue.use(Vuetify, {
   components: {

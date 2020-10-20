@@ -193,7 +193,7 @@
           <v-btn
             width="100"
             class="mx-3"
-            @click="columnModelReset()"
+            @click="columnModelReset(1)"
             :style="[theme.bg_p, theme.co]"
             >关闭</v-btn
           >
@@ -291,7 +291,7 @@ export default {
       that.vueComponents = components.map((c) => {
         return {
           name: c.split("/")[1],
-          path: c.split(".")[1].split(".")[0],
+          path: "/tp" + c.split(".")[1].split(".")[0],
         };
       });
       that.columnModel.component = that.vueComponents[0].path;
@@ -326,15 +326,12 @@ export default {
     async columnQueryAll() {
       let that = this;
       try {
-        let result = await that.api.column.queryAll({},
-          that
-        );
-        if(result.code === 200){
+        let result = await that.api.column.queryAll({}, that);
+        if (result.code === 200) {
           that.items = result.data;
           that.columnModel.pid = that.parents[0].self;
         }
         that.items = result.code === 200 ? result.data : [];
-        
       } catch (e) {
         console.log(e);
       }
@@ -355,8 +352,8 @@ export default {
         icon: "",
         canD: 1,
       };
-      delete that.columnModel.component;
       that.$v.columnModel.$touch();
+      delete that.columnModel.component;
       if (type != "add") return that.updateColumn(nodeModel, that.columnModel);
       if (!checkObjectIsEmpty(that.imgFile)) {
         let imgResult = await upload(that.imgFile, that);
@@ -404,12 +401,14 @@ export default {
     async editCol(params) {
       let that = this;
       that.columnModel = params;
-      let pidModel = that.parents.find((p) => p.nid === params.pid);
-      let component = that.vueComponents.find(
-        (c) => c.component === params.component
+      let pidModel = that.parents.find((p) => p.nid === params.nid);
+      let component = that.vueComponents.find((c) =>
+        params.component.endsWith(c.path)
       );
+      console.log(params, pidModel, component);
       that.columnModel.component = component.path;
       that.columnModel.pid = pidModel.self;
+      console.log(that.columnModel)
       that.dialogType = "edit";
       that.dialog = true;
     },
@@ -516,7 +515,7 @@ export default {
       let arr = [];
       arr.push({
         name: "顶级栏目",
-        nid: 2,
+        nid: that.nid,
         deep: 1,
       });
       that.items.forEach((item) => {
