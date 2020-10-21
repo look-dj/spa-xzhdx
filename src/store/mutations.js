@@ -9,9 +9,8 @@ const mutations = {
       state.theme = _theme[theme];
     }
   },
-  getRouter(state, router) {
+  setRouter(state, router) {
     state.router = router;
-    saveItemObj("router", router);
   },
   setMenu(state, menu) {
     state.menu = menu;

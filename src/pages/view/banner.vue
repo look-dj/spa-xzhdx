@@ -61,10 +61,10 @@
         </template>
       </v-data-table>
     </v-card>
-    <v-dialog v-model="dialog" persistent class="v-dialog">
-      <v-row justify="center" v-if="dialog">
-        <v-col cols="6" class="pa-0 ma-0">
-          <v-card class="pa-5">
+    <v-dialog v-model="dialog" persistent class="v-dialog" :fullscreen="$vuetify.breakpoint.xs?true:false">
+      <v-row justify="center" class="ma-0" v-if="dialog"  style="height:100%;">
+        <v-col cols="12" md="6" class="pa-0 ma-0">
+          <v-card height="100%">
             <v-card-title class="justify-center text-uppercase text-h5"
               >{{ dialogType == "add" ? "添加" : "更新" }}banner</v-card-title
             >

@@ -65,9 +65,9 @@
         </template>
       </v-data-table>
     </v-card>
-    <v-dialog v-model="dialog" persistent class="v-dialog">
-      <v-row justify="center" v-if="dialog">
-        <v-col cols="8" class="pa-0 ma-0">
+    <v-dialog v-model="dialog" persistent class="v-dialog" :fullscreen="$vuetify.breakpoint.xs?true:false">
+      <v-row justify="center" class="ma-0" v-if="dialog">
+        <v-col cols="12" md="8" class="pa-0 ma-0">
           <v-card class="pa-5">
             <v-card-title class="justify-center text-uppercase text-h5 py-2"
               >{{ dialogType == "add" ? "添加" : "更新" }}节点</v-card-title
@@ -110,7 +110,7 @@
                     v-model="nodeModel.component_path"
                   ></v-text-field>
                 </v-col>
-                <v-col cols="4" class="d-flex flex-row align-center">
+                <v-col cols="12" md="4" class="d-flex flex-row align-center">
                   <span>节点权限</span>
                   <v-radio-group row class="ml-10" v-model="nodeModel.auth">
                     <v-radio
@@ -241,6 +241,7 @@ export default {
           path: c.split(".")[1].split(".")[0],
         };
       });
+      console.log(that.vueComponents)
     },
     nodeModelReset(type = null) {
       let that = this;
@@ -269,7 +270,7 @@ export default {
         });
       that.nodeModel.pid = _node.id;
       that.nodeModel.deep = Number(_node.deep) + 1;
-      that.nodeModel.component_name = that.nodeModel.component.split("/")[1];
+      that.nodeModel.component_name = that.nodeModel.component.split('/')[1];
       if (type !== "add") return that.nodeUpdate();
       try {
         let result = await that.api.add(that.nodeModel, that);

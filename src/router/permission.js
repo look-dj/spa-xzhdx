@@ -3,6 +3,7 @@ import router from "./router";
 import layout from "@/pages/layout.vue";
 const whiteList = ["/login", "/home", "/register"];
 import { getItemForStorage, getItemObj, saveItemObj } from "@/plugins/util.js";
+import store from "@/store/index";
 let getRouter;
 router.beforeEach(async (to, from, next) => {
   let token = getItemForStorage("token");
@@ -15,7 +16,7 @@ router.beforeEach(async (to, from, next) => {
       next({ path: "/login" });
     } else {
       if (!getRouter) {
-        if (!getItemObj("router")) {
+        if (!store.state.router) {
           let _user = getItemObj("user");
           if (!_user) return next({ path: "/login" });
           fetchRouter({ auth: _user.auth, token }).then((res) => {
@@ -23,12 +24,12 @@ router.beforeEach(async (to, from, next) => {
               next({ path: "/login" });
             } else {
               getRouter = res.data;
-              saveItemObj("router", getRouter);
+              store.commit('setRouter', getRouter)
               routerGo(to, next);
             }
           });
         } else {
-          getRouter = getItemObj("router");
+          getRouter = store.state.router;
           routerGo(to, next);
         }
       } else {

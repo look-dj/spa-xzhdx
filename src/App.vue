@@ -74,7 +74,7 @@ export default {
     },
     getSonColumn(id) {
       let that = this;
-      let _node = getItemObj("router")[0].children;
+      let _node = that.$store.state.router[0].children;
       _node = _node.filter((_) => _.cid == id);
       return _node;
     },
@@ -86,11 +86,10 @@ export default {
         let result = await getUserInfo();
         if (result.code === 200) {
           saveItemObj("user", result.data);
-          if (!getItemObj("router")) {
+          if (!that.$store.state.router) {
             let _res = await fetchRouter({ auth: result.data.auth });
-            console.log(_res)
             if (_res.code === 200) {
-              saveItemObj("router", _res.data);
+              that.$store.commit('setRouter', _res.data)
             }
           }
           // that.$router.replace("/");

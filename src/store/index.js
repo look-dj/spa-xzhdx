@@ -8,7 +8,7 @@ Vue.use(Vuex);
 const store = new Vuex.Store({
 	state: {
 		theme: {},
-		routes: [],
+		routes: null,
 		menu: [],
 		mid: "", // 第几个菜单被激活
 		side: false,

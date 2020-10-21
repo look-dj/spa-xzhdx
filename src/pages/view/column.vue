@@ -291,7 +291,7 @@ export default {
       that.vueComponents = components.map((c) => {
         return {
           name: c.split("/")[1],
-          path: "/tp" + c.split(".")[1].split(".")[0],
+          path: "/tp"+ c.split(".")[1].split(".")[0],
         };
       });
       that.columnModel.component = that.vueComponents[0].path;
@@ -346,8 +346,8 @@ export default {
         call: that.columnModel.name,
         title: that.columnModel.name,
         component: that.columnModel.component,
-        component_name: that.columnModel.component.split("/")[1],
-        component_path: that.columnModel.component,
+        component_name: that.columnModel.component.split("/tp/")[1],
+        component_path: that.columnModel.component.split("/")[1],
         auth: "user",
         icon: "",
         canD: 1,

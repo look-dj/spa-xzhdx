@@ -168,6 +168,8 @@ export default {
     drawer_content.classList.add("drawer"); //chrome
     drawer_content.style.scrollbarWidth = "none"; //firefox
     drawer_content.style.msOverflowStyle = "none"; //edge
+    let nid = that.$route.query.nid;
+    that.$store.commit('setMid',nid);
     that.getMenu();
   },
   methods: {
@@ -247,6 +249,7 @@ export default {
     },
     async getMenu() {
       let that = this;
+      if(that.$store.state.menu.length>0) return that.menu = that.$store.state.menu;
       let _user = getItemObj("user");
       if(!_user){
         that.$hint({ msg: "获取 用户权限失败", type: "error" });
@@ -258,7 +261,6 @@ export default {
         let result = await fetchMenu({ auth: _user.auth });
         that.menu = result.code == 200 ? result.data : [];
         that.$store.commit("setMenu", result.data);
-        that.$store.commit("setMid", result.data[0].id);
       } catch (e) {
         console.log(e);
         that.$hint({ msg: "获取菜单失败", type: "error" });
@@ -339,7 +341,7 @@ export default {
   width: 60%;
   right: 0;
   top: 0;
-  z-index: 10;
+  z-index: 1;
 }
 .view_col {
   height: calc(100vh - 48px);
@@ -349,6 +351,7 @@ export default {
 }
 .xs_view_col {
   background-image: url("../assets/images/bg.jpg");
+  // background-color: rgba(0,0,0,0.2);
   background-size: 100% 100%;
   background-repeat: no-repeat;
 }
