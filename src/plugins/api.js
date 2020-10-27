@@ -43,7 +43,7 @@ export function fetchRouter(data, obj = {}) {
 export function fetchMenu(data, obj = {}) {
 	return fetch("/spa/node/getMenu", data, obj);
 }
-export function getUserInfo(data={}, obj = {}) {
+export function getUserInfo(data = {}, obj = {}) {
 	// console.log(store.state);
 	return fetch("/spa/getUserInfo", data, obj);
 }
@@ -90,7 +90,7 @@ export async function upload(data, obj = {}, deletePath = "") {
 	let fm = new FormData();
 	fm.append("file", data);
 	try {
-		let result = await axios.post("/storage/upload/image", fm, {
+		let result = await axios.post("/storage/image/upload", fm, {
 			headers: {
 				"Content-type": "multipart/form-data",
 				authorization: `look-dj ${store.state.storeageToken}`,
@@ -118,7 +118,7 @@ export async function upload(data, obj = {}, deletePath = "") {
 export async function deleteFile(data) {
 	try {
 		let result = await fetch(
-			"/storage/delete/image",
+			"/storage/image/delete",
 			{ name: data },
 			{},
 			"post",
@@ -133,7 +133,19 @@ export async function deleteFile(data) {
 		return false;
 	}
 }
-
+// 获取所有图片
+export async function getImageList(data, obj) {
+	try {
+		let result = await fetch("/storage/image/list", data, obj, "post", {
+			"Content-Type": "application/json;charset=UTF-8",
+			authorization: `look-dj ${store.state.storeageToken}`,
+		});
+		return result;
+	} catch (e) {
+		console.log(e);
+		return false;
+	}
+}
 function fetch(
 	url,
 	data,

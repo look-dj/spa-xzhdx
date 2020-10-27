@@ -92,8 +92,8 @@ module.exports = {
 				},
 			},
 			"/storage": {
-				// target: 'http://127.0.0.1:9018',
-				target: "http://storage.luciferdj.cn",
+				target: 'http://127.0.0.1:9018',
+				// target: "http://storage.luciferdj.cn",
 				changeOrigin: true,
 				ws: true,
 				pathRewrite: {
