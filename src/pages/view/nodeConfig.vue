@@ -65,7 +65,12 @@
         </template>
       </v-data-table>
     </v-card>
-    <v-dialog v-model="dialog" persistent class="v-dialog" :fullscreen="$vuetify.breakpoint.xs?true:false">
+    <v-dialog
+      v-model="dialog"
+      persistent
+      class="v-dialog"
+      :fullscreen="$vuetify.breakpoint.xs ? true : false"
+    >
       <v-row justify="center" class="ma-0" v-if="dialog">
         <v-col cols="12" md="8" class="pa-0 ma-0">
           <v-card class="pa-5">
@@ -175,7 +180,7 @@
   </v-container>
 </template>
 <script>
-import { Api, upload, deleteFile } from "@api";
+import { Api } from "@api";
 import { icons as _icons } from "@/plugins/static.js";
 export default {
   name: "nodeConfig",
@@ -241,7 +246,7 @@ export default {
           path: c.split(".")[1].split(".")[0],
         };
       });
-      console.log(that.vueComponents)
+      console.log(that.vueComponents);
     },
     nodeModelReset(type = null) {
       let that = this;
@@ -270,14 +275,15 @@ export default {
         });
       that.nodeModel.pid = _node.id;
       that.nodeModel.deep = Number(_node.deep) + 1;
-      that.nodeModel.component_name = that.nodeModel.component.split('/')[1];
+      that.nodeModel.component_name = that.nodeModel.component.split("/")[1];
       if (type !== "add") return that.nodeUpdate();
       try {
         let result = await that.api.add(that.nodeModel, that);
         // console.log(result);
-        that.$store.dispatch("getRouter");
+        // that.$store.dispatch("getRouter");
         that.$hint({
-          msg: "添加成功",
+          msg: result.msg,
+          type: result.code === 200 ? "success" : "error",
         });
         that.nodeModelReset();
       } catch (e) {
@@ -395,7 +401,7 @@ export default {
     },
   },
   components: {
-    upload: () => import("@components/upload.vue"),
+    // upload: () => import("@components/upload.vue"),
   },
 };
 </script>

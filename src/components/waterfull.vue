@@ -30,7 +30,7 @@ export default {
   name: "waterfull",
   props: {
     data: {
-      default: [],
+      default: ()=>[],
       type: Array,
     },
   },
@@ -78,7 +78,7 @@ export default {
       let len = data.length >>> 0;
       let loaded = 0;
       if (loaded >= len) that.$emit("preloaded");
-      data.forEach((item, idx) => {
+      data.forEach((item) => {
         let img = new Image();
         img.src = item.link;
         img.onload = img.onerror = (e) => {

@@ -347,7 +347,7 @@ export default {
         title: that.columnModel.name,
         component: that.columnModel.component,
         component_name: that.columnModel.component.split("/tp/")[1],
-        component_path: that.columnModel.component.split("/")[1],
+        component_path: that.columnModel.link,
         auth: "user",
         icon: "",
         canD: 1,

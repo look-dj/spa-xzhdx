@@ -291,7 +291,7 @@ export default {
           // console.log(_theme);
           el.style.backgroundColor = _theme;
         });
-        el.addEventListener("mouseout", function (e) {
+        el.addEventListener("mouseout", function () {
           el.style.backgroundColor = "transparent";
         });
       },

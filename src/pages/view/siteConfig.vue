@@ -24,7 +24,8 @@
             v-model="imgFile"
             :src="siteModel.logo"
             type="card"
-            cols="12" md="4"
+            cols="12"
+            md="4"
           ></upload>
           <v-col cols="12" md="4"
             ><v-text-field
@@ -70,7 +71,7 @@
   </v-container>
 </template>
 <script>
-import { siteGet, deleteFile, upload, siteUpdate } from "@api";
+import { siteGet, upload, siteUpdate } from "@api";
 import { checkObjectIsEmpty } from "@/plugins/util.js";
 // 站点配置
 export default {
@@ -123,7 +124,10 @@ export default {
       }
       try {
         let result = await siteUpdate(that.siteModel, that);
-        that.$hint({ msg: "修改成功" });
+        that.$hint({
+          msg: result.msg,
+          type: result.code === 200 ? "success" : "error",
+        });
       } catch (e) {
         console.log(e);
       }

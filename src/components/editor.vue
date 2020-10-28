@@ -20,13 +20,13 @@ export default {
     },
   }),
   watch: {
-    edVal(val, old) {
+    edVal(val) {
       let that = this;
       if (val && val !== that.value) {
         that.$emit("ed_input", val);
       }
     },
-    value(val, old) {
+    value(val) {
       let that = this;
       if (!that.ed) return;
       if (val && val !== that.edVal) {
@@ -41,7 +41,7 @@ export default {
   },
   methods: {},
   mounted() {
-    let that = this;
+    // let that = this;
   },
   components: {
     "ck-editor": CkeditorComponent,

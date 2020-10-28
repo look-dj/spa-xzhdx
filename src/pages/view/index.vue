@@ -50,7 +50,7 @@ export default {
   },
   methods: {
     render() {
-      let that = this;
+      // let that = this;
       // that.chart1.render();
     },
     async getColumnCount() {

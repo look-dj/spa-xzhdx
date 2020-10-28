@@ -126,8 +126,8 @@
 </template>
 
 <script>
-import { Api, upload, deleteFile } from "@api";
-import { checkObjectIsEmpty } from "@/plugins/util.js";
+import { Api } from "@api";
+// import { checkObjectIsEmpty } from "@/plugins/util.js";
 export default {
   inject: ["getSonColumn"],
   name: "faction",
@@ -183,7 +183,7 @@ export default {
         console.log(e);
       }
     },
-    async submit(type) {
+    async submit() {
       let that = this;
       if (that.dialogType !== "add") return that.yearUpdate();
       // console.log(that.imgFile);
@@ -195,7 +195,10 @@ export default {
         // that.yearModel.pic = result0 ? result0 : "";
         // if (!result0) return that.$hint({ msg: "上传图片失败", type: "error" });
         let result = await that.api.add(that.yearModel, that);
-        that.$hint({ msg: result.msg });
+        that.$hint({
+          msg: result.msg,
+          type: result.code === 200 ? "success" : "error",
+        });
         that.yearModelReset();
       } catch (e) {
         console.log(e);
@@ -212,7 +215,10 @@ export default {
       try {
         let result = await that.api.update(that.yearModel, that);
         that.yearModelReset();
-        that.$hint({ msg: "更新成功" });
+        that.$hint({
+          msg: result.msg,
+          type: result.code === 200 ? "success" : "error",
+        });
       } catch (e) {
         console.log(e);
       }
@@ -245,7 +251,10 @@ export default {
         // }
         try {
           let result1 = await that.api.delete({ id: params.id }, that);
-          that.$hint({ msg: "删除成功" });
+          that.$hint({
+            msg: result1.msg,
+            type: result1.code === 200 ? "success" : "error",
+          });
           that.yearQueryAll();
         } catch (e) {
           console.log(e);
@@ -254,7 +263,7 @@ export default {
     },
   },
   components: {
-    upload: () => import("@components/upload.vue"),
+    // upload: () => import("@components/upload.vue"),
   },
   computed: {
     theme() {

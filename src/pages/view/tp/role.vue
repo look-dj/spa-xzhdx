@@ -214,7 +214,7 @@ export default {
           that
         );
         that.items = result.code === 200 ? result.data : [];
-        that.items.forEach((item, idx) => {
+        that.items.forEach((item) => {
           item.date = format.call(new Date(Number(item.date)), "yyyy-MM-dd");
         });
         console.log(result);
@@ -240,7 +240,10 @@ export default {
         }
         that.roleModel.avatar = imgResult.path;
         let result = await that.api.add(that.roleModel, that);
-        that.$hint({ msg: "添加成功" });
+        that.$hint({
+          msg: result.msg,
+          type: result.code === 200 ? "success" : "error",
+        });
         that.roleModelReset();
       } catch (e) {
         console.log(e);
@@ -264,7 +267,10 @@ export default {
       try {
         that.roleModel.date = new Date().valueOf();
         let result = await that.api.update(that.roleModel, that);
-        that.$hint({ msg: "修改成功" });
+        that.$hint({
+          msg: result.msg,
+          type: result.code === 200 ? "success" : "error",
+        });
         that.roleModelReset();
       } catch (e) {
         console.log(e);

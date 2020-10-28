@@ -7,7 +7,7 @@ let temp = {
 		close: () => {},
 	}),
 };
-import Vue from "vue";
+// import Vue from "vue";
 //测试
 export function t(data, obj = {}) {
 	return fetch("/t", data, obj);
