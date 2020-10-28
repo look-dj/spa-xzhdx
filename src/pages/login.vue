@@ -1,7 +1,7 @@
 <template>
   <v-container fluid class="pa-0">
     <v-sheet
-      style="position: relative;z-index:10;"
+      style="position: relative; z-index: 10"
       color="#fff"
       height="70"
       elevation="2"
@@ -11,17 +11,30 @@
         <span class="text-h5">雪中悍刀行</span>
       </v-card>
     </v-sheet>
-    <v-sheet color="#f3f7f9" style="position: relative;z-index:9;" height="calc(100vh - 70px)">
+    <v-sheet
+      color="#f3f7f9"
+      style="position: relative; z-index: 9"
+      height="calc(100vh - 70px)"
+    >
       <v-sheet class="d-flex justify-center login_sheet" color="#eee">
         <v-sheet v-if="!$vuetify.breakpoint.xs">
           <v-img src="@assets/images/HDJ454548.png"></v-img>
         </v-sheet>
-        <v-sheet color="#fff" :width="!$vuetify.breakpoint.xs?600:''" style="display:grid;place-items: center;">
-          <v-card flat min-width="350" light :class="$vuetify.breakpoint.xs?'py-6':''">
+        <v-sheet
+          color="#fff"
+          :width="!$vuetify.breakpoint.xs ? 600 : ''"
+          style="display: grid; place-items: center"
+        >
+          <v-card
+            flat
+            min-width="350"
+            light
+            :class="$vuetify.breakpoint.xs ? 'py-6' : ''"
+          >
             <v-card-title class="justify-center">
               <span class="text-uppercase text-h4">welcome 登录</span>
             </v-card-title>
-            <v-card-text :class="$vuetify.breakpoint.xs?'px-12':''">
+            <v-card-text :class="$vuetify.breakpoint.xs ? 'px-12' : ''">
               <v-text-field
                 label="账号"
                 v-model="userModel.account"
@@ -33,13 +46,15 @@
               <v-text-field
                 label="密码"
                 v-model="userModel.password"
-                :type="passState?'text':'password'"
+                :type="passState ? 'text' : 'password'"
                 :error-messages="passwordErrors"
                 required
                 @input="$v.userModel.password.$touch()"
                 @blur="$v.userModel.password.$touch()"
-                :append-icon="passState?'iconfont-kejian':'iconfont-bukejian'"
-                @click:append="passState=!passState"
+                :append-icon="
+                  passState ? 'iconfont-kejian' : 'iconfont-bukejian'
+                "
+                @click:append="passState = !passState"
               ></v-text-field>
               <!-- <div class="d-flex">
                 <v-text-field label="请输入验证码"></v-text-field>
@@ -48,14 +63,15 @@
             </v-card-text>
             <v-card-actions class="justify-center">
               <v-btn
-                :width="!$vuetify.breakpoint.xs?350:250"
+                :width="!$vuetify.breakpoint.xs ? 350 : 250"
                 height="50"
                 rounded
-                v-ripple="{class: '#0094ff'}"
+                v-ripple="{ class: '#0094ff' }"
                 color="#0094ff"
                 class="text-h6 white--text"
                 @click="login"
-              >登录</v-btn>
+                >登录</v-btn
+              >
             </v-card-actions>
           </v-card>
         </v-sheet>
@@ -64,10 +80,10 @@
   </v-container>
 </template>
 <script>
-import {login as userLogin} from "@api";
+import { login as userLogin } from "@api";
 import { saveItemObj } from "@/plugins/util.js";
 import { required } from "vuelidate/lib/validators";
-import config from "@/plugins/config.js"
+import config from "@/plugins/config.js";
 export default {
   name: "login",
   validations: {
@@ -112,11 +128,11 @@ export default {
           console.log(result);
           localStorage.setItem("token", result.data.token);
           saveItemObj("user", result.data);
-          that.userModelReset();
           that.$hint({ msg: result.msg });
           setTimeout(() => {
             that.$router.replace("/");
-          }, 500);
+            that.userModelReset();
+          }, 200);
         } else {
           that.$hint({ msg: "登录失败请检查账号密码", type: "error" });
           that.userModelReset();
@@ -134,7 +150,7 @@ export default {
       };
     },
   },
-    computed: {
+  computed: {
     accountErrors() {
       const errors = [];
       if (!this.$v.userModel.account.$dirty) return errors;

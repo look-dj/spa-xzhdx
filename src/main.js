@@ -2,10 +2,10 @@
 // (runtime-only or standalone) has been set in webpack.base.conf with an alias.
 import Vue from "vue";
 import App from "./App";
+import store from "./store/index";
 import router from "./router/router.js";
 // import sass from "sass";
 import vuetify from "./plugins/vuetify";
-import store from "./store/index";
 import md5 from "js-md5";
 import toast from "@components/toast/toast.js";
 import hint from "@components/hint/hint.js";
@@ -23,8 +23,8 @@ Vue.prototype.$md5 = md5;
 // Vue.prototype.$app = App;
 /* eslint-disable no-new */
 new Vue({
-  router,
   store,
+  router,
   vuetify,
   render: (h) => h(App),
 }).$mount("#app");

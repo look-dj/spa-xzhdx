@@ -122,7 +122,7 @@
       <v-row align="stretch" height="100%">
         <v-col
           :cols="viewCols"
-          class="view_col"
+          class="view_col py-0"
           :class="$vuetify.breakpoint.xs ? 'xs_view_col' : ''"
         >
           <transition name="slide">

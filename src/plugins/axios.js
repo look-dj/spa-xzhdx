@@ -57,6 +57,10 @@ Service.interceptors.response.use(
 			router.replace("/login");
 		}
 		if (response.data.code === 200) {
+      if('token' in response.data){
+        localStorage.setItem('token',response.data.token);
+        delete response.data.token;
+      }  
 			return response.data;
 		} else {
 			new Vue().bus.$hint({
