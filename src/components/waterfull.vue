@@ -53,7 +53,7 @@ export default {
         gap,
       };
       that.preload(that.data);
-    }, 400);
+    }, 600);
 
     if (that.$vuetify.breakpoint.xs) {
       that.images = that.data;

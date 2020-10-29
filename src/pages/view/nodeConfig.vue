@@ -190,8 +190,8 @@ export default {
         value: "call",
       },
       {
-        text: "模板名称",
-        value: "name",
+        text: "组件NAME",
+        value: "component_name",
       },
       {
         text: "父节点",
@@ -199,7 +199,7 @@ export default {
       },
       {
         text: "路径",
-        value: "v_path",
+        value: "component_path",
       },
       {
         text: "操作",
@@ -332,14 +332,8 @@ export default {
       try {
         let result = await that.api.queryAll();
         that.items = result.code === 200 ? result.data : [];
-        that.items.map((n) => {
-          n.order = n.id;
-          if (n.deep !== 1) {
-            n.call = " |—" + n.call;
-            n.order = Number(n.pid) + 0.1;
-          }
-        });
-        that.items.sort((a, b) => a.order - b.order);
+
+        // that.items.sort((a, b) => a.order - b.order);
         console.log(that.items);
       } catch (e) {
         console.log(e);

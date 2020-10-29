@@ -115,11 +115,15 @@
                 ></v-text-field>
               </v-col>
               <v-col cols="6" height="100" class="px-10">
-                <v-select
+                <!-- <v-select
                   label="势力划分"
                   v-model="roleModel.faction"
                   :items="['北凉', '江南']"
-                ></v-select>
+                ></v-select> -->
+                <v-text-field
+                  label="势力划分"
+                  v-model="roleModel.faction"
+                ></v-text-field>
               </v-col>
               <v-col cols="12">
                 <v-textarea

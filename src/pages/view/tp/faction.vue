@@ -101,7 +101,7 @@
                 ></v-text-field>
                 <v-select
                   label="当前状态"
-                  :items="['兴盛', '羸弱']"
+                  :items='["繁荣", "灭亡", "衰败", "快速发展"]'
                   v-model="factionModel.state"
                 ></v-select>
               </v-col>
