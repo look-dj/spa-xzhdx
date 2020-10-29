@@ -1,6 +1,7 @@
 <template>
   <div>
     <upload type="auto" v-model="file" accept="image"></upload>
+    <editor></editor>
     <v-btn @click="test">测试</v-btn>
   </div>
 </template>
@@ -30,7 +31,7 @@ export default {
     editor: () => import("@components/editor.vue"),
   },
   mounted() {
-    let that = this;
+    // let that = this;
     
     // that.$toast({msg:'确定要这么做吗？'})
   },

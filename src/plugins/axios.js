@@ -1,5 +1,5 @@
 import axios from "axios";
-const isdev = require("./config.js").isdev;
+// const isdev = require("./config.js").isdev;
 import router from "@/router/router.js";
 import Vue from "vue";
 let token = localStorage.getItem("token");
@@ -26,7 +26,7 @@ Service.interceptors.request.use(
       if(config.data==='{}') delete config.data;
 		}
 		let isInWhiteList = (s) => whiteList.some((w) => w === s);
-		if (!!!isInWhiteList(config.url)) {
+		if (!isInWhiteList(config.url)) {
 			//将判断转为boolean
 			if (!token) {
 				router.push({ path: "/login" });

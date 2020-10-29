@@ -66,7 +66,7 @@ export default {
         console.log(e);
       }
     },
-    async submit(type) {
+    async submit() {
       let that = this;
       if (that.pageType !== "add") return that.updatePage();
       if (that.pageModel.content === "")
@@ -75,7 +75,10 @@ export default {
       that.pageModel.show = true;
       try {
         let result = await that.api.add(that.pageModel, that);
-        that.$hint({ msg: "成功。。。" });
+        that.$hint({
+          msg: result.msg,
+          type: result.code === 200 ? "success" : "error",
+        });
       } catch (e) {
         console.log(e);
       }

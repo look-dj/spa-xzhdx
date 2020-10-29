@@ -7,7 +7,7 @@
 </template>
 
 <script>
-import { getItemForStorage, saveItemObj, getItemObj } from "@/plugins/util.js";
+import { getItemForStorage, saveItemObj } from "@/plugins/util.js";
 import config from "@/plugins/config.js";
 import { getUserInfo, fetchRouter, storageLogin } from "@api";
 export default {

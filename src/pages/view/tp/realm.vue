@@ -176,7 +176,7 @@ export default {
         console.log(e);
       }
     },
-    async submit(type) {
+    async submit() {
       let that = this;
       if (that.dialogType !== "add") return that.realmUpdate();
       console.log(that.imgFile);
@@ -218,7 +218,10 @@ export default {
       try {
         let result = await that.api.update(that.realmModel, that);
         that.realmModelReset();
-        that.$hint({ msg: "更新成功" });
+        that.$hint({
+          msg: result.msg,
+          type: result.code === 200 ? "success" : "error",
+        });
       } catch (e) {
         console.log(e);
       }

@@ -101,7 +101,7 @@ export default {
       return obj[this.type];
     },
     fileType() {
-      let that = this;
+      // let that = this;
       if (this.accept === "image") return "image/jpeg,image/png";
       else if (this.accept === "video") return "*";
       else return "video/*,image/jpeg,image/png";
