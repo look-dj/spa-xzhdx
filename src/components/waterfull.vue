@@ -1,8 +1,27 @@
 <template>
   <v-sheet class="img_sheet" ref="sheet">
-    <div class="top_loading" v-if="topLoading"></div>
+    <div class="top_loading" v-if="topLoading">
+      <div class="top_load">
+        <div class="k-line2 k-line12-1"></div>
+        <div class="k-line2 k-line12-2"></div>
+        <div class="k-line2 k-line12-3"></div>
+        <div class="k-line2 k-line12-4"></div>
+        <div class="k-line2 k-line12-5"></div>
+        <div class="k-line2 k-line12-6"></div>
+        <div class="k-line2 k-line12-7"></div>
+        <div class="k-line2 k-line12-8"></div>
+      </div>
+    </div>
+    <div class="bottom_loading"  >
+      <div class="la-ball-elastic-dots la-2x">
+        <div></div>
+        <div></div>
+        <div></div>
+        <div></div>
+        <div></div>
+      </div>
+    </div>
     <div class="place">
-      <div class="bottom_loading"></div>
       <div
         class="imgs"
         :class="$vuetify.breakpoint.xs ? 'imgs_xs' : ''"
@@ -30,7 +49,7 @@ export default {
   name: "waterfull",
   props: {
     data: {
-      default: ()=>[],
+      default: () => [],
       type: Array,
     },
   },
@@ -53,7 +72,7 @@ export default {
         gap,
       };
       that.preload(that.data);
-    }, 600);
+    }, 1000);
 
     if (that.$vuetify.breakpoint.xs) {
       that.images = that.data;
@@ -121,6 +140,8 @@ export default {
       });
       console.log("排列完成");
       that.topLoading = false;
+      document.querySelector('.bottom_loading').style.bottom = Math.max.call(null,heights) + 'px'
+      // that.bottomLoading = true;
     },
   },
   created() {},
@@ -135,12 +156,19 @@ export default {
   & .top_loading {
     position: absolute;
     z-index: 2;
-    width: 100px;
+    width: 100%;
     height: 40px;
     left: 50%;
     top: 0;
     transform: translateX(-50%);
-    background-color: #eee;
+    background-color: #fff;
+  }
+  & .bottom_loading {
+    position: absolute;
+    bottom: 0px;
+    background-color: #222;
+    left: 0;
+    z-index: 3;
   }
 }
 .place {
@@ -148,6 +176,7 @@ export default {
   top: 0;
   left: 0;
   width: 100%;
+
   & .imgs {
     position: absolute;
     z-index: 1;
@@ -161,5 +190,199 @@ export default {
 .imgs_xs {
   position: relative !important;
   margin: 0 auto;
+}
+.top_load {
+  width: 600px;
+  margin: 0 auto;
+  text-align: center;
+}
+.k-line2 {
+  display: inline-block;
+  background: #666;
+  height: 10px;
+  width: 10px;
+  opacity: 0;
+  border-radius: 50%;
+  transform: translateX(-300px);
+  background-color: #4b9cdb;
+}
+.k-line12-1 {
+  animation: k-loadingS 4s infinite;
+  animation-delay: 0.8s;
+}
+.k-line12-2 {
+  animation: k-loadingS 4s infinite;
+  animation-delay: 0.7s;
+}
+.k-line12-3 {
+  animation: k-loadingS 4s infinite;
+  animation-delay: 0.6s;
+}
+.k-line12-4 {
+  animation: k-loadingS 4s infinite;
+  animation-delay: 0.5s;
+}
+.k-line12-5 {
+  animation: k-loadingS 4s infinite;
+  animation-delay: 0.4s;
+}
+.k-line12-6 {
+  animation: k-loadingS 4s infinite;
+  animation-delay: 0.3s;
+}
+.k-line12-7 {
+  animation: k-loadingS 4s infinite;
+  animation-delay: 0.2s;
+}
+.k-line12-8 {
+  animation: k-loadingS 4s infinite;
+  animation-delay: 0.1s;
+}
+@keyframes k-loadingS {
+  40% {
+    transform: translateX(0);
+    opacity: 0.8;
+  }
+  100% {
+    transform: translateX(300px);
+    opacity: 0;
+  }
+}
+.la-ball-elastic-dots,
+.la-ball-elastic-dots > div {
+  position: relative;
+  -webkit-box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  box-sizing: border-box;
+}
+
+.la-ball-elastic-dots {
+  display: block;
+  font-size: 0;
+  color: #fff;
+}
+
+.la-ball-elastic-dots.la-dark {
+  color: #333;
+}
+
+.la-ball-elastic-dots > div {
+  display: inline-block;
+  float: none;
+  background-color: #222;
+  border: 0 solid #222;
+}
+
+.la-ball-elastic-dots {
+  width: 120px;
+  height: 10px;
+  font-size: 0;
+  text-align: center;
+}
+
+.la-ball-elastic-dots > div {
+  display: inline-block;
+  width: 10px;
+  height: 10px;
+  white-space: nowrap;
+  border-radius: 100%;
+  -webkit-animation: ball-elastic-dots-anim 1s infinite;
+  -moz-animation: ball-elastic-dots-anim 1s infinite;
+  -o-animation: ball-elastic-dots-anim 1s infinite;
+  animation: ball-elastic-dots-anim 1s infinite;
+}
+
+.la-ball-elastic-dots.la-sm {
+  width: 60px;
+  height: 4px;
+}
+
+.la-ball-elastic-dots.la-sm > div {
+  width: 4px;
+  height: 4px;
+}
+
+.la-ball-elastic-dots.la-2x {
+  width: 240px;
+  height: 20px;
+}
+
+.la-ball-elastic-dots.la-2x > div {
+  width: 20px;
+  height: 20px;
+}
+
+.la-ball-elastic-dots.la-3x {
+  width: 360px;
+  height: 30px;
+}
+
+.la-ball-elastic-dots.la-3x > div {
+  width: 30px;
+  height: 30px;
+}
+
+@-webkit-keyframes ball-elastic-dots-anim {
+  0%,
+  100% {
+    margin: 0;
+    -webkit-transform: scale(1);
+    transform: scale(1);
+  }
+
+  50% {
+    margin: 0 5%;
+    -webkit-transform: scale(0.65);
+    transform: scale(0.65);
+  }
+}
+
+@-moz-keyframes ball-elastic-dots-anim {
+  0%,
+  100% {
+    margin: 0;
+    -moz-transform: scale(1);
+    transform: scale(1);
+  }
+
+  50% {
+    margin: 0 5%;
+    -moz-transform: scale(0.65);
+    transform: scale(0.65);
+  }
+}
+
+@-o-keyframes ball-elastic-dots-anim {
+  0%,
+  100% {
+    margin: 0;
+    -o-transform: scale(1);
+    transform: scale(1);
+  }
+
+  50% {
+    margin: 0 5%;
+    -o-transform: scale(0.65);
+    transform: scale(0.65);
+  }
+}
+
+@keyframes ball-elastic-dots-anim {
+  0%,
+  100% {
+    margin: 0;
+    -webkit-transform: scale(1);
+    -moz-transform: scale(1);
+    -o-transform: scale(1);
+    transform: scale(1);
+  }
+
+  50% {
+    margin: 0 5%;
+    -webkit-transform: scale(0.65);
+    -moz-transform: scale(0.65);
+    -o-transform: scale(0.65);
+    transform: scale(0.65);
+  }
 }
 </style>

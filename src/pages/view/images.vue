@@ -17,7 +17,7 @@ export default {
   methods: {
     async fetchImageList() {
       let that = this;
-      let imageResult = await getImageList({ limit: 15, offset: 0 }, that);
+      let imageResult = await getImageList({ limit: 10, offset: 0 }, that);
       that.images = imageResult.data;
     },
   },
