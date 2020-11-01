@@ -46,7 +46,5 @@ $sum_head: $head + 48px;
 .water_body{
   height: calc(100vh - #{$sum_head});
   width: 100%;
-  overflow-x: hidden;
-  overflow-y: scroll;
 }
 </style>

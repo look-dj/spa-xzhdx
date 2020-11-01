@@ -1,48 +1,52 @@
 <template>
-  <v-sheet class="img_sheet" ref="sheet">
-    <div class="top_loading" v-if="topLoading">
-      <div class="top_load">
-        <div class="k-line2 k-line12-1"></div>
-        <div class="k-line2 k-line12-2"></div>
-        <div class="k-line2 k-line12-3"></div>
-        <div class="k-line2 k-line12-4"></div>
-        <div class="k-line2 k-line12-5"></div>
-        <div class="k-line2 k-line12-6"></div>
-        <div class="k-line2 k-line12-7"></div>
-        <div class="k-line2 k-line12-8"></div>
+  <div id="water">
+    <v-sheet class="img_sheet" ref="sheet">
+      <div class="top_loading" v-if="topLoading">
+        <div class="top_load">
+          <div class="k-line2 k-line12-1"></div>
+          <div class="k-line2 k-line12-2"></div>
+          <div class="k-line2 k-line12-3"></div>
+          <div class="k-line2 k-line12-4"></div>
+          <div class="k-line2 k-line12-5"></div>
+          <div class="k-line2 k-line12-6"></div>
+          <div class="k-line2 k-line12-7"></div>
+          <div class="k-line2 k-line12-8"></div>
+        </div>
+        <p class="loading_text ma-0">加载中. . .</p>
       </div>
-    </div>
-    <div class="bottom_loading"  >
-      <div class="la-ball-elastic-dots la-2x">
-        <div></div>
-        <div></div>
-        <div></div>
-        <div></div>
-        <div></div>
+
+      <div class="place">
+        <div class="bottom_loading">
+          <div class="la-ball-elastic-dots la-2x">
+            <div></div>
+            <div></div>
+            <div></div>
+            <div></div>
+            <div></div>
+          </div>
+        </div>
+        <div
+          class="imgs"
+          :class="$vuetify.breakpoint.xs ? 'imgs_xs' : ''"
+          v-for="(item, idx) in images"
+          :key="idx"
+          :style="`width:${config.itemWidth}px;height:${item.height}px;padding: 0 ${config.gap}px;`"
+        >
+          <img
+            :src="item.link"
+            class="img"
+            :style="`border-width:${Math.floor(
+              Math.random() * 6 + 2
+            )}px;border-color:rgba(${Math.floor(
+              Math.random() * 255
+            )},${Math.floor(Math.random() * 255)},${Math.floor(
+              Math.random() * 255
+            )},${Math.floor(Math.random() * 10)});`"
+          />
+        </div>
       </div>
-    </div>
-    <div class="place">
-      <div
-        class="imgs"
-        :class="$vuetify.breakpoint.xs ? 'imgs_xs' : ''"
-        v-for="(item, idx) in images"
-        :key="idx"
-        :style="`width:${config.itemWidth}px;height:${item.height}px;padding: 0 ${config.gap}px;`"
-      >
-        <img
-          :src="item.link"
-          class="img"
-          :style="`border-width:${Math.floor(
-            Math.random() * 6 + 2
-          )}px;border-color:rgba(${Math.floor(
-            Math.random() * 255
-          )},${Math.floor(Math.random() * 255)},${Math.floor(
-            Math.random() * 255
-          )},${Math.floor(Math.random() * 10)});`"
-        />
-      </div>
-    </div>
-  </v-sheet>
+    </v-sheet>
+  </div>
 </template>
 <script>
 export default {
@@ -58,12 +62,15 @@ export default {
     images: [],
     topLoading: true,
     bottomLoading: false,
+    heights: [],
   }),
   mounted() {
     let that = this;
     let itemWidth = 350;
     let gap = 10;
-
+    document
+      .querySelector("#water")
+      .addEventListener("scroll", that.waterScroll, true);
     setTimeout(() => {
       that.config = {
         W: that.$refs.sheet.$el.offsetWidth,
@@ -90,6 +97,17 @@ export default {
     });
   },
   methods: {
+    // 滚动加载
+    waterScroll(e) {
+      let div = document.querySelector("#water");
+      let place = document.querySelector(".place");
+      let scrollTop = Math.floor(div.scrollTop);
+      let offsetH = Math.floor(place.offsetHeight);
+      console.log(scrollTop)
+      // if(offsetTop - scrollTop < 15){
+
+      // }
+    },
     // 预加载
     preload(data) {
       let that = this;
@@ -139,17 +157,29 @@ export default {
         img.style.top = top + "px";
       });
       console.log("排列完成");
+      let footHeight = 50;
       that.topLoading = false;
-      document.querySelector('.bottom_loading').style.bottom = Math.max.call(null,heights) + 'px'
+      let placeHei = Math.max.apply(null, heights) + footHeight;
+      document.querySelector(".place").style.height = placeHei + "px";
       // that.bottomLoading = true;
     },
   },
   created() {},
-  beforeDestroy() {},
+  beforeDestroy() {
+    document
+      .querySelector("#water")
+      .removeEventListener("scroll", this.waterScroll, true);
+  },
   computed: {},
 };
 </script>
 <style lang="scss" scoped>
+#water {
+  width: 100%;
+  height: 100%;
+  overflow-x: hidden;
+  overflow-y: scroll;
+}
 .img_sheet {
   width: 100%;
   position: relative;
@@ -157,26 +187,30 @@ export default {
     position: absolute;
     z-index: 2;
     width: 100%;
-    height: 40px;
+    height: 60px;
     left: 50%;
     top: 0;
     transform: translateX(-50%);
     background-color: #fff;
   }
-  & .bottom_loading {
-    position: absolute;
-    bottom: 0px;
-    background-color: #222;
-    left: 0;
-    z-index: 3;
-  }
+}
+.loading_text {
+  width: 100%;
+  text-align: center;
 }
 .place {
   position: absolute;
   top: 0;
   left: 0;
   width: 100%;
-
+  & .bottom_loading {
+    position: absolute;
+    bottom: 20px;
+    // background-color: #222;
+    left: 0;
+    z-index: 3;
+    width: 100%;
+  }
   & .imgs {
     position: absolute;
     z-index: 1;
@@ -248,6 +282,9 @@ export default {
     opacity: 0;
   }
 }
+.la-ball-elastic-dots {
+  margin: 0 auto;
+}
 .la-ball-elastic-dots,
 .la-ball-elastic-dots > div {
   position: relative;
@@ -269,8 +306,8 @@ export default {
 .la-ball-elastic-dots > div {
   display: inline-block;
   float: none;
-  background-color: #222;
-  border: 0 solid #222;
+  background-color: #0094ff;
+  border: 0 solid #0094ff;
 }
 
 .la-ball-elastic-dots {
@@ -308,8 +345,8 @@ export default {
 }
 
 .la-ball-elastic-dots.la-2x > div {
-  width: 20px;
-  height: 20px;
+  width: 12px;
+  height: 12px;
 }
 
 .la-ball-elastic-dots.la-3x {

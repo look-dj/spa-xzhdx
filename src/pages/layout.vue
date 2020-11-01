@@ -191,6 +191,7 @@ export default {
         // console.log(data);
         that.$store.commit("setMid", data.id);
         that.viewKey++;
+        document.title = data.title?data.title:'雪中';
         that.$router.push({
           path: data.component_path,
           query: { nid: data.id },

@@ -7,7 +7,6 @@ import store from "@/store/index";
 let getRouter;
 router.beforeEach(async (to, from, next) => {
   let token = getItemForStorage("token");
-  document.title = to.meta.title ? to.meta.title : from.meta.title;
   let inWhiteList = (s) => whiteList.some((w) => w === s);
   if (inWhiteList(to.path)) {
     next();

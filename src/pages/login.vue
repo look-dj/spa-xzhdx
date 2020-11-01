@@ -134,7 +134,7 @@ export default {
             that.userModelReset();
           }, 200);
         } else {
-          that.$hint({ msg: "登录失败请检查账号密码", type: "error" });
+          that.$hint({ msg: "登录失败,请检查账号密码", type: "error" });
           that.userModelReset();
         }
       } catch (e) {
