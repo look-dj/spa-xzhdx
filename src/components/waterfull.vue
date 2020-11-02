@@ -16,7 +16,7 @@
       </div>
 
       <div class="place">
-        <div class="bottom_loading">
+        <div class="bottom_loading" v-if="bottomLoading">
           <div class="la-ball-elastic-dots la-2x">
             <div></div>
             <div></div>
@@ -25,11 +25,13 @@
             <div></div>
           </div>
         </div>
+        <div class="bottom_hint" v-if="bottom_hint">我也是有底线的. . .</div>
         <div
           class="imgs"
           :class="$vuetify.breakpoint.xs ? 'imgs_xs' : ''"
           v-for="(item, idx) in images"
           :key="idx"
+          :data-sign="item.sign"
           :style="`width:${config.itemWidth}px;height:${item.height}px;padding: 0 ${config.gap}px;`"
         >
           <img
@@ -56,6 +58,14 @@ export default {
       default: () => [],
       type: Array,
     },
+    scrollData: {
+      default: () => [],
+      type: Array,
+    },
+    total: {
+      default: 0,
+      type: Number,
+    },
   },
   data: () => ({
     config: {},
@@ -63,6 +73,8 @@ export default {
     topLoading: true,
     bottomLoading: false,
     heights: [],
+    scrollNum: 0,
+    bottom_hint: false
   }),
   mounted() {
     let that = this;
@@ -78,7 +90,17 @@ export default {
         itemWidth,
         gap,
       };
-      that.preload(that.data);
+      that.data.forEach((item) => (item.sign = new Date().valueOf()));
+      that.preload(that.data).then((res) => {
+        console.log("加载完成");
+        that.images = res;
+        that.$nextTick(() => {
+          let imgs = document.querySelectorAll(".imgs");
+          imgs = Array.from(imgs);
+          imgs = imgs.filter((node) => node.dataset.sign == that.data[0].sign);
+          that.arrange(imgs);
+        });
+      });
     }, 1000);
 
     if (that.$vuetify.breakpoint.xs) {
@@ -86,63 +108,91 @@ export default {
       that.topLoading = false;
       return;
     }
-
-    that.$on("preloaded", function () {
-      console.log("加载完成");
-      that.images = that.data;
-      that.$nextTick(() => {
-        let imgs = document.querySelectorAll(".imgs");
-        that.arrange(imgs);
-      });
-    });
+  },
+  watch: {
+    scrollData(val) {
+      // console.log(val)
+      let that = this;
+      that.scrollData = val;
+      if (that.scrollData.length < 1) return;
+      setTimeout(() => {
+        that.preload(that.scrollData).then((res) => {
+          that.images = that.images.concat(res);
+          that.$nextTick(() => {
+            let imgs = document.querySelectorAll(".imgs");
+            imgs = Array.from(imgs);
+            imgs = imgs.filter((i) => i.dataset.sign == res[0].sign);
+            that.arrange(imgs);
+          });
+        });
+      }, 1000);
+    },
   },
   methods: {
     // 滚动加载
     waterScroll(e) {
+      let that = this;
       let div = document.querySelector("#water");
       let place = document.querySelector(".place");
       let scrollTop = Math.floor(div.scrollTop);
       let offsetH = Math.floor(place.offsetHeight);
-      console.log(scrollTop)
-      // if(offsetTop - scrollTop < 15){
-
-      // }
+      // 发起获取后期资源的请求时机
+      let timimg = offsetH - scrollTop - div.offsetHeight;
+      if (timimg < 100 && !that.bottomLoading) {
+        that.bottomLoading = true;
+        if (++that.scrollNum >= that.total) {
+          console.log(that.scrollNum);
+          that.bottomLoading = false;
+          that.bottom_hint = true;
+          document
+            .querySelector("#water")
+            .removeEventListener("scroll", this.waterScroll, true);
+          return;
+        }
+        that.$emit("getScrollData", that.scrollNum);
+        console.log("该发起网络请求了");
+      }
     },
     // 预加载
     preload(data) {
       let that = this;
-      let heights = [];
       let len = data.length >>> 0;
       let loaded = 0;
-      if (loaded >= len) that.$emit("preloaded");
-      data.forEach((item) => {
-        let img = new Image();
-        img.src = item.link;
-        img.onload = img.onerror = (e) => {
-          if (e.type === "load") {
-            let height =
-              (img.height * (that.config.itemWidth - that.config.gap * 2)) /
-              img.width;
-            item.height = Math.ceil(height);
-            heights.push(Math.ceil(height));
-            loaded++;
-          } else {
-            item.loadfail = true;
-            loaded++;
-          }
-          if (loaded >= len) that.$emit("preloaded");
-        };
+      let images = [];
+      let sign = new Date().valueOf();
+      return new Promise((resolve, reject) => {
+        if (loaded >= len) resolve(images);
+        data.forEach((item) => {
+          let img = new Image();
+          img.src = item.link;
+          img.onload = img.onerror = (e) => {
+            if (e.type === "load") {
+              let height =
+                (img.height * (that.config.itemWidth - that.config.gap * 2)) /
+                img.width;
+              item.height = Math.ceil(height);
+              item.sign = sign;
+              images.push(item);
+              loaded++;
+            } else {
+              item.loadfail = true;
+              loaded++;
+            }
+            if (loaded >= len) resolve(images);
+          };
+        });
       });
     },
     arrange(imgs) {
       let that = this;
-      let heights = [];
+      let heights = that.heights;
+      let first = true;
+      if (heights.length > 0) first = false;
       let top = null;
       let left = null;
-      that.images.forEach((item, idx) => {
-        let img = imgs[idx];
-        let h = img.offsetHeight;
-        if (idx < that.config.col) {
+      imgs.forEach((item, idx) => {
+        let h = item.offsetHeight;
+        if (idx < that.config.col && first) {
           heights.push(h);
           left = idx * that.config.itemWidth;
           top = 0;
@@ -153,15 +203,15 @@ export default {
           left = minIndex * that.config.itemWidth;
           heights[minIndex] = top + h;
         }
-        img.style.left = left + "px";
-        img.style.top = top + "px";
+        item.style.left = left + "px";
+        item.style.top = top + "px";
       });
       console.log("排列完成");
       let footHeight = 50;
       that.topLoading = false;
       let placeHei = Math.max.apply(null, heights) + footHeight;
       document.querySelector(".place").style.height = placeHei + "px";
-      // that.bottomLoading = true;
+      that.bottomLoading = false;
     },
   },
   created() {},
@@ -203,13 +253,17 @@ export default {
   top: 0;
   left: 0;
   width: 100%;
-  & .bottom_loading {
+  & .bottom_loading,  & .bottom_hint {
     position: absolute;
     bottom: 20px;
     // background-color: #222;
     left: 0;
     z-index: 3;
     width: 100%;
+  }
+  & .bottom_hint{
+   text-align:center;
+   text-decoration: underline;
   }
   & .imgs {
     position: absolute;

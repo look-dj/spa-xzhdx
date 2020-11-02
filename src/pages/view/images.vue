@@ -2,7 +2,7 @@
   <div>
     <v-card-title class="py-0 water_head">瀑布流展示图片</v-card-title>
     <div class="water_body pl-4" v-if="images.length > 0">
-      <waterfull :data="images"></waterfull>
+      <waterfull :data="images" :total="total" :scrollData="scrollData" @getScrollData="getScrollData"></waterfull>
     </div>
   </div>
 </template>
@@ -13,13 +13,23 @@ export default {
   name: "images",
   data: () => ({
     images: [],
+    scrollData: [],
+    total: 0
   }),
   methods: {
     async fetchImageList() {
       let that = this;
       let imageResult = await getImageList({ limit: 10, offset: 0 }, that);
       that.images = imageResult.data;
+      that.total =  imageResult.total;
     },
+		async getScrollData(num){
+			console.log(num)
+			let that = this;
+			let imageResult=  await getImageList({ limit: 10, offset: num }, that);
+      that.scrollData = imageResult.data;
+      that.total =  imageResult.total;
+		}
   },
   watch: {},
   components: {
