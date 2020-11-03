@@ -16,66 +16,59 @@
       style="position: relative; z-index: 9"
       height="calc(100vh - 70px)"
     >
-      <v-sheet class="d-flex justify-center login_sheet" color="#eee">
-        <v-sheet v-if="!$vuetify.breakpoint.xs">
-          <v-img src="@assets/images/HDJ454548.png"></v-img>
-        </v-sheet>
-        <v-sheet
-          color="#fff"
-          :width="!$vuetify.breakpoint.xs ? 600 : ''"
-          style="display: grid; place-items: center"
-        >
-          <v-card
-            flat
-            min-width="350"
-            light
-            :class="$vuetify.breakpoint.xs ? 'py-6' : ''"
-          >
-            <v-card-title class="justify-center">
-              <span class="text-uppercase text-h4">welcome 登录</span>
-            </v-card-title>
-            <v-card-text :class="$vuetify.breakpoint.xs ? 'px-12' : ''">
-              <v-text-field
-                label="账号"
-                v-model="userModel.account"
-                :error-messages="accountErrors"
-                required
-                @input="$v.userModel.account.$touch()"
-                @blur="$v.userModel.account.$touch()"
-              ></v-text-field>
-              <v-text-field
-                label="密码"
-                v-model="userModel.password"
-                :type="passState ? 'text' : 'password'"
-                :error-messages="passwordErrors"
-                required
-                @input="$v.userModel.password.$touch()"
-                @blur="$v.userModel.password.$touch()"
-                :append-icon="
-                  passState ? 'iconfont-kejian' : 'iconfont-bukejian'
-                "
-                @click:append="passState = !passState"
-              ></v-text-field>
-              <!-- <div class="d-flex">
-                <v-text-field label="请输入验证码"></v-text-field>
-                <canvas id="canvas" width="120" height="30"></canvas>
-              </div>-->
-            </v-card-text>
-            <v-card-actions class="justify-center">
-              <v-btn
-                :width="!$vuetify.breakpoint.xs ? 350 : 250"
-                height="50"
-                rounded
-                v-ripple="{ class: '#0094ff' }"
-                color="#0094ff"
-                class="text-h6 white--text"
-                @click="login"
-                >登录</v-btn
-              >
-            </v-card-actions>
-          </v-card>
-        </v-sheet>
-      </v-sheet>
+      <div class="login_out_box">
+        <div class="login_inside_box">
+          <v-sheet height="100%" v-if="!$vuetify.breakpoint.xs">
+            <img src="@assets/images/HDJ454548.png" height="100%" />
+          </v-sheet>
+          <v-sheet height="100%" class="sheet2">
+            <v-card flat light width="350" style="margin: 0 auto">
+              <v-card-title class="justify-center py-0">
+                <v-img src="@assets/images/img1.jpg" width="350"></v-img>
+              </v-card-title>
+              <v-card-text :class="$vuetify.breakpoint.xs ? 'px-12' : 'px-8'">
+                <v-text-field
+                  label="账号"
+                  v-model="userModel.account"
+                  :error-messages="accountErrors"
+                  required
+                  @input="$v.userModel.account.$touch()"
+                  @blur="$v.userModel.account.$touch()"
+                ></v-text-field>
+                <v-text-field
+                  label="密码"
+                  v-model="userModel.password"
+                  :type="passState ? 'text' : 'password'"
+                  :error-messages="passwordErrors"
+                  required
+                  @input="$v.userModel.password.$touch()"
+                  @blur="$v.userModel.password.$touch()"
+                  :append-icon="
+                    passState ? 'iconfont-kejian' : 'iconfont-bukejian'
+                  "
+                  @click:append="passState = !passState"
+                ></v-text-field>
+              </v-card-text>
+              <v-card-actions class="justify-center">
+                <v-btn
+                  :width="!$vuetify.breakpoint.xs ? 320 : 250"
+                  height="50"
+                  rounded
+                  v-ripple="{ class: '#0094ff' }"
+                  color="#0094ff"
+                  class="text-h6 white--text"
+                  @click="login"
+                  >登录</v-btn
+                >
+                
+              </v-card-actions>
+              <p class="go_register">
+                <router-link to="/">去注册？</router-link>
+              </p>
+            </v-card>
+          </v-sheet>
+        </div>
+      </div>
     </v-sheet>
   </v-container>
 </template>
@@ -190,5 +183,54 @@ export default {
   top: 50%;
   transform: translate(-50%, -50%);
   border-radius: 4px;
+}
+.login_out_box {
+  padding-top: 36%;
+  width: 65%;
+  // height: 80%;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  & .login_inside_box {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 100%;
+    min-width: 650px;
+    height: 100%;
+    min-height: 430px;
+    display: flex;
+    & .sheet2 {
+      flex: 1;
+    }
+  }
+}
+.go_register{
+  width:100%;
+  text-align: center;
+  margin-top: 10px;
+  position: relative;
+  line-height: 20px;
+  // &::after{
+  //   content:"";
+  //   position: absolute;
+  //   top:50%;
+  //   left:50%;
+  //   width: 80%;
+  //   height: 1px;
+  //   background-color: #999;
+  //   opacity: 0.2;
+  //   z-index:1;
+  //   transform: translate(-50%, -50%);
+  // }
+  & > a{
+    position: relative;
+    z-index:2;
+    padding: 0 5px;
+    background-color: #fff;
+    // text-decoration: none;
+  }
 }
 </style>
