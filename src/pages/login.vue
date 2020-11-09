@@ -60,7 +60,6 @@
                   @click="login"
                   >登录</v-btn
                 >
-                
               </v-card-actions>
               <p class="go_register">
                 <router-link to="/">去注册？</router-link>
@@ -118,7 +117,6 @@ export default {
         that.$loading({ msg: "登录" });
         let result = await userLogin(that.userModel, that);
         if (result.code === 200) {
-          console.log(result);
           localStorage.setItem("token", result.data.token);
           saveItemObj("user", result.data);
           that.$hint({ msg: result.msg });

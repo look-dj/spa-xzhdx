@@ -1,3 +1,4 @@
+
 import Vue from "vue";
 import Vuex from "vuex";
 import actions from "./actions.js";
@@ -13,7 +14,7 @@ const store = new Vuex.Store({
 		mid: "", // 第几个菜单被激活
 		side: false,
     isDeleteFile: false, //  删除数据时是否连同删除图片
-    storeageToken: ''
+    storeageToken: '',
 	},
 	mutations,
 	getters,

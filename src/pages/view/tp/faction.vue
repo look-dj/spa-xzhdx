@@ -45,7 +45,7 @@
           nextIcon: 'iconfont iconfont-ic_right_line',
         }"
       >
-        <template v-slot:item.oper="{ item }">
+        <template v-slot:[`item.oper`]="{ item }">
           <v-btn
             fab
             x-small

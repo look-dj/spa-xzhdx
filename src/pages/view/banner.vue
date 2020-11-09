@@ -35,7 +35,7 @@
         }"
       >
         <!-- <template v-slot:item.cid="{item}">{{columnByCid[item.cid].name}}</template> -->
-        <template v-slot:item.oper="{ item }">
+        <template v-slot:[`item.oper`]="{ item }">
           <v-btn
             fab
             x-small

@@ -84,6 +84,7 @@ export default {
       if (!token) return;
       try {
         let result = await getUserInfo();
+        // console.log(result)
         if (result.code === 200) {
           saveItemObj("user", result.data);
           if (!that.$store.state.router) {
@@ -95,7 +96,7 @@ export default {
           // that.$router.replace("/");
           // that.$hint({ msg: "自动登录成功" });
         } else {
-          that.$hint({ msg: "tokan验证失败", type: "error" });
+          that.$hint({ msg: "token验证失败", type: "error" });
           that.$router.replace("/login");
         }
       } catch (e) {

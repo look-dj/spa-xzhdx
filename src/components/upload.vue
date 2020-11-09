@@ -77,7 +77,7 @@ export default {
   },
   mounted() {},
   created() {
-    if (this.src.length > 0) this.path = this.src;
+    if (this.src&&this.src.length > 0) this.path = this.src;
   },
   beforeDestroy() {
     URL.revokeObjectURL(this.path);

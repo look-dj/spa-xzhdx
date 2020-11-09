@@ -42,7 +42,7 @@
           nextIcon: 'iconfont iconfont-ic_right_line',
         }"
       >
-        <template v-slot:item.oper="{ item }">
+        <template v-slot:[`item.oper`]="{ item }">
           <v-btn
             fab
             x-small
@@ -251,13 +251,11 @@ export default {
       that.bus.$on("toastConfirm", async function () {
         try {
           let result = await that.api.delete({ id: params.id }, that);
-          if (params.pic.length > 0 && that.$store.state.isDeleteFile) {
-            await deleteFile(params.pic);
-          }
           that.$hint({
             msg: result.msg,
             type: result.code === 200 ? "success" : "error",
           });
+					if (params.pic.length > 0 && that.$store.state.isDeleteFile)deleteFile(params.pic);
           that.realmQueryAll();
         } catch (e) {
           console.log(e);

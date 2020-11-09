@@ -2,11 +2,13 @@ import service from "./axios.js";
 import axios from "axios";
 import store from "@/store/index";
 import { checkObjectIsEmpty } from "./util";
+import router from "@/router/router.js";
 let temp = {
 	$loading: () => ({
 		close: () => {},
 	}),
 };
+const whiteList = ["/spa/login", "/spa/register"];
 // import Vue from "vue";
 //测试
 export function t(data, obj = {}) {
@@ -117,30 +119,32 @@ export async function upload(data, obj = {}, deletePath = "") {
 //删除上传的文件
 export async function deleteFile(data) {
 	try {
-		let result = await fetch(
+		let result = await axios.post(
 			"/storage/image/delete",
 			{ name: data },
-			{},
-			"post",
 			{
-				"Content-Type": "application/json;charset=UTF-8",
-				authorization: `look-dj ${store.state.storeageToken}`,
+				headers: {
+					"Content-Type": "application/json;charset=UTF-8",
+					authorization: `look-dj ${store.state.storeageToken}`,
+				},
 			}
 		);
-		return result;
+		return result.data;
 	} catch (e) {
 		console.log(e);
 		return false;
 	}
 }
 // 获取所有图片
-export async function getImageList(data, obj) {
+export async function getImageList(data) {
 	try {
-		let result = await fetch("/storage/image/list", data, obj, "post", {
-			"Content-Type": "application/json;charset=UTF-8",
-			authorization: `look-dj ${store.state.storeageToken}`,
+		let result = await axios.post("/storage/image/list", data, {
+			headers: {
+				"Content-Type": "application/json;charset=UTF-8",
+				authorization: `look-dj ${store.state.storeageToken}`,
+			},
 		});
-		return result;
+		return result.data;
 	} catch (e) {
 		console.log(e);
 		return false;
@@ -157,6 +161,12 @@ function fetch(
 ) {
 	if (checkObjectIsEmpty(obj)) obj = temp;
 	let o = obj.$loading();
+	let token = localStorage.getItem("token");
+	let isInWhiteList = (s) => whiteList.some((w) => w === s);
+	if (!isInWhiteList(url)) {
+		if (!token) return router.push({ path: "/login" });
+		headers.Authorization = `Bearer ${token}`;
+	}
 	return new Promise((resolve, reject) => {
 		service({
 			url,

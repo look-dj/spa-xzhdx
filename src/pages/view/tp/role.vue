@@ -56,7 +56,7 @@
         }"
       >
         <!-- <template v-slot:item.id="{item}">{{item-key}}</template> -->
-        <template v-slot:item.oper="{ item }">
+        <template v-slot:[`item.oper`]="{ item }">
           <v-btn
             fab
             x-small

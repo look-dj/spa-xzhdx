@@ -34,15 +34,15 @@
         }"
       >
         <!-- 名称 -->
-        <template v-slot:item.name="{ item }">
+        <template v-slot:[`item.name`]="{ item }">
           <span>{{ item.origin !== nid ? item.name : "|—" + item.name }}</span>
         </template>
         <!-- 是否显示 -->
-        <template v-slot:item.show="{ item }">
+        <template v-slot:[`item.show`]="{ item }">
           <span>{{ item.show ? "显示" : "隐藏" }}</span>
         </template>
         <!-- 操作 -->
-        <template v-slot:item.oper="{ item }">
+        <template v-slot:[`item.oper`]="{ item }">
           <v-btn
             fab
             x-small

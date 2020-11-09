@@ -2,37 +2,19 @@ import axios from "axios";
 // const isdev = require("./config.js").isdev;
 import router from "@/router/router.js";
 import Vue from "vue";
-let token = localStorage.getItem("token");
-/**
- * code为402没有查到数据
- */
-const whiteList = ["/spa/login", "/spa/register",];
 const Service = axios.create({
 	timeout: 20000,
-  // baseURL: isdev?"/api":'',
-  baseURL: "",
+	// baseURL: isdev?"/api":'',
+	baseURL: "",
 	method: "post",
 	withCredentials: true,
 });
 Service.interceptors.request.use(
 	(config) => {
-		// console.log(config)
-		if (config.data.token) {
-			token = config.data.token;
-			config.headers.Authorization = `Bearer ${config.data.token}`;
-		}
+    // console.log(config)
 		if (config.method === "post") {
-      config.data = JSON.stringify(config.data);
-      if(config.data==='{}') delete config.data;
-		}
-		let isInWhiteList = (s) => whiteList.some((w) => w === s);
-		if (!isInWhiteList(config.url)) {
-			//将判断转为boolean
-			if (!token) {
-				router.push({ path: "/login" });
-				return;
-			}
-			config.headers.Authorization = `Bearer ${token}`;
+			config.data = JSON.stringify(config.data);
+			if (config.data === "{}") delete config.data;
 		}
 		return config;
 	},
@@ -49,7 +31,7 @@ Service.interceptors.request.use(
 // 添加响应拦截器
 Service.interceptors.response.use(
 	(response) => {
-    if (Number(response.data.code) > 350) {
+		if (Number(response.data.code) > 350) {
 			new Vue().bus.$hint({
 				msg: response.data.msg,
 				type: "error",
@@ -57,10 +39,10 @@ Service.interceptors.response.use(
 			router.replace("/login");
 		}
 		if (response.data.code === 200) {
-      if('token' in response.data){
-        localStorage.setItem('token',response.data.token);
-        delete response.data.token;
-      }  
+			if ("token" in response.data) {
+				localStorage.setItem("token", response.data.token);
+				delete response.data.token;
+			}
 			return response.data;
 		} else {
 			new Vue().bus.$hint({
@@ -74,9 +56,9 @@ Service.interceptors.response.use(
 		new Vue().bus.$hint({
 			msg: "出现错误啦。。。",
 			type: "error",
-    });
-    new Vue().bus.$emit('error',error);
-    router.replace("/error");
+		});
+		new Vue().bus.$emit("error", error);
+		router.replace("/error");
 		return Promise.reject(error);
 	}
 );
